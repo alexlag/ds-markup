@@ -2,6 +2,10 @@ Accounts.ui._options.passwordSignupFields = "EMAIL_ONLY";
 
 Meteor.subscribe('tweets');
 
+Meteor.startup(function() {
+	Session.set('selectedTab', 'recentTweets');
+});
+
 displayAlert = function(message, type, timeout) {
 	var div = $('#addingAlert');
 	if(!type) type = 'info';
@@ -63,7 +67,8 @@ Template.adding.events({
 })
 
 Template.statistic.total = function() {
-	var total = 50,
+	var pos_total = 25, neu_total = 50, neg_total = 25,
+		total = pos_total + neu_total + neg_total,
 		pos = Tweets.find({creator: Meteor.userId(), polarity: 'positive'}).count(),
 		neu = Tweets.find({creator: Meteor.userId(), polarity: 'neutral'}).count(),
 		neg = Tweets.find({creator: Meteor.userId(), polarity: 'negative'}).count();
@@ -71,14 +76,43 @@ Template.statistic.total = function() {
 		max = Math.max(total, sum);
 	return {
 		'todo': total,
-		'pos': pos,
-		'neu': neu,
-		'neg': neg,
-		'sum': sum,
-		'barpos': Math.floor(100.0 * pos / max),
-		'barneu': Math.floor(100.0 * neu / max),
-		'barneg': Math.floor(100.0 * neg / max)
+		'pos_progress': pos + ' of ' + pos_total,
+		'neu_progress': neu + ' of ' + neu_total,
+		'neg_progress': neg + ' of ' + neg_total,
+		'sum_progress': sum + ' of ' + total,
+		'barpos': Math.floor(100.0 * pos / pos_total),
+		'barneu': Math.floor(100.0 * neu / neu_total),
+		'barneg': Math.floor(100.0 * neg / neg_total)
 	}
+}
+
+var selectedTab = function(option) {
+	var tab = Session.get('selectedTab');
+	if(option === undefined) 
+		return tab;
+	return option == tab ? 'active' : '';
+}
+
+Template.collaborate.rendered = function() {
+	$('a[data-toggle=tab]').click(function(e) {
+		Session.set('selectedTab', $(this).attr('href').slice(1));
+	});
+}
+
+Template.collaborate.isRecent = function() {
+	return selectedTab('recentTweets');
+}
+
+Template.collaborate.isUnchecked = function() {
+	return selectedTab('uncheckedTweets');
+}
+
+Template.collaborate.isChecked = function() {
+	return selectedTab('checkedTweets');
+}
+
+Template.collaborate.isAdded = function() {
+	return selectedTab('addedTweets');
 }
 
 Template.recentTweetsTable.entries = function() {
@@ -108,7 +142,11 @@ Pagination.prototype._bootstrap = function() {
 	return html;
 }
 
-var uncheckedPage = new Pagination("uncheckedTweets");
+Pagination.prototype.sortedSkip = function() {
+	return $.extend(this.skip(), {sort: {created: -1}});
+}
+
+uncheckedPage = new Pagination("uncheckedTweets");
 
 Template.uncheckedTweetsTable.entries = function() {
 	var cursor = Tweets.find({
@@ -116,7 +154,7 @@ Template.uncheckedTweetsTable.entries = function() {
 			{ creator: { $ne: Meteor.userId()}},
 			{ feedback: { $not: { $elemMatch: { user: Meteor.userId() } }}}
 		]
-	}, uncheckedPage.skip());
+	}, uncheckedPage.sortedSkip());
 	return cursor;
 }
 
@@ -148,7 +186,7 @@ Template.checkedTweetsTable.entries = function() {
 			{ creator: { $ne: Meteor.userId()}},
 			{ feedback: { $elemMatch: { user: Meteor.userId() } }}
 		]
-	}, checkedPage.skip());
+	}, checkedPage.sortedSkip());
 	return cursor;
 }
 
@@ -175,7 +213,7 @@ Template.collaborate.checkedSize = function() {
 var addedPage = new Pagination("addedTweets");
 
 Template.addedTweetsTable.entries = function() {
-	var cursor = Tweets.find({ creator: Meteor.userId()}, addedPage.skip() );
+	var cursor = Tweets.find({ creator: Meteor.userId()}, addedPage.sortedSkip() );
 	return cursor;
 }
 

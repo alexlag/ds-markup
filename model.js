@@ -21,7 +21,7 @@ Meteor.methods({
 	addTweet: function(options){
 		var id = Random.id();
 
-		if (options.text.length < 20) {
+		if (options.text.length < 10) {
 			if(Meteor.isClient)
 				Session.set('alert', { alert: 'danger', message: 'That was boring, gimme more'});
 			return id;

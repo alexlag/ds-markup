@@ -109,15 +109,19 @@
 			</div>
 			<div class="panel-body">
 				{{#with total}}
-					<p><strong>Neutral tweets:</strong> {{neu}} added</p>
-					<p><strong>Positive tweets:</strong> {{pos}} added</p>
-					<p><strong>Negative tweets:</strong> {{neg}} added</p>
-					<p><strong>Total progress:</strong> {{sum}} of {{todo}}</p>
+					<p><strong>Neutral tweets:</strong> {{neu_progress }} added</p>
 					<div class="progress">
 						<div class="progress-bar progress-bar-info" style="width: {{barneu}}%"></div>
+					</div>
+					<p><strong>Positive tweets:</strong> {{pos_progress}} added</p>
+					<div class="progress">
 						<div class="progress-bar progress-bar-success" style="width: {{barpos}}%"></div>
+					</div>
+					<p><strong>Negative tweets:</strong> {{neg_progress}} added</p>
+					<div class="progress">
 						<div class="progress-bar progress-bar-danger" style="width: {{barneg}}%"></div>
 					</div>
+					<p><strong>Total progress:</strong> {{sum_progress}}</p>
 				{{/with}}	
 			</div>
 		</div>
@@ -127,33 +131,33 @@
 <template name="collaborate">
 	<h2>Tweets</h2>
 	<ul class="nav nav-tabs" id="tweetTabs">
-		<li class="active">
+		<li class="{{isRecent}}">
 			<a href="#recentTweets" data-toggle="tab">Recent </a>
 		</li>
 		{{#if currentUser}}
-			<li>
+			<li class="{{isUnchecked}}">
 				<a href="#uncheckedTweets" data-toggle="tab">Unchecked <span class="badge">{{uncheckedSize}}</span></a>
 			</li>
-			<li>
-				<a href="#markedTweets" data-toggle="tab">Checked <span class="badge">{{checkedSize}}</span></a>
+			<li class="{{isChecked}}">
+				<a href="#checkedTweets" data-toggle="tab">Checked <span class="badge">{{checkedSize}}</span></a>
 			</li>
-			<li>
+			<li class="{{isAdded}}">
 				<a href="#addedTweets" data-toggle="tab">By me <span class="badge">{{addedSize}}</span></a>
 			</li>
 		{{/if}}
 	</ul>
 	<div class="tab-content">
-		<div class="tab-pane active" id="recentTweets">	
+		<div class="tab-pane {{isRecent}}" id="recentTweets">	
 			{{> recentTweetsTable}}
 		</div>
 		{{#if currentUser}}
-			<div class="tab-pane" id="uncheckedTweets">	
+			<div class="tab-pane {{isUnchecked}}" id="uncheckedTweets">	
 				{{> uncheckedTweetsTable}}
 			</div>
-			<div class="tab-pane" id="markedTweets">	
+			<div class="tab-pane {{isChecked}}" id="checkedTweets">	
 				{{> checkedTweetsTable}}
 			</div>
-			<div class="tab-pane" id="addedTweets">	
+			<div class="tab-pane {{isAdded}}" id="addedTweets">	
 				{{> addedTweetsTable}}
 			</div>
 		{{/if}}
