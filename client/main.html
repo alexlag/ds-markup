@@ -1,0 +1,253 @@
+<head>
+	<title>tweetset</title>
+
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" >
+</head>
+
+<body>
+	{{> navbar}}
+	<div class="container">
+		<div class="row-fluid marketing"> 
+			<div class="alert alert-success" id="globalAlert" style="display: none"></div>
+			<div class="page-header">
+				<h1>Twitter markup</h1>
+			</div>
+			<div class="row"> 
+				{{> adding}}
+				{{#if currentUser}}
+					{{> statistic}}
+				{{/if}}	
+			</div>
+			<div class="row">
+				{{> collaborate}}
+			</div>
+		</div>
+	</div>
+</body>
+
+<template name="navbar">
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand">ISPRAS</a>
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav nav">
+					<li class="active"><a>Markup</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					{{ loginButtons }}
+				</ul>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="adding">
+	<div class="col-md-6">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">Add tweets</h3>
+			</div>
+			<div class="panel-body">
+				{{#if currentUser}}
+				<div class="alert alert-success" id="addingAlert" style="display: none"></div>
+				<div class="row">
+					<div class="form-group col-md-12">
+						<label class="control-label" for="inputNeutral">Add neutral tweet</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="inputNeutral">
+							<span class="input-group-btn">
+								<a class="btn btn-info" id="addNeutral">Add</a>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group has-success col-md-12">
+						<label class="control-label" for="inputPositive">Add positive tweet</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="inputPositive">
+							<span class="input-group-btn">
+								<a class="btn btn-success" id="addPositive">Add</a>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group has-error col-md-12">
+						<label class="control-label" for="inputNegative">Add negative tweet</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="inputNegative">
+							<span class="input-group-btn">
+								<a class="btn btn-danger" id="addNegative">Add</a>
+							</span>
+						</div>
+					</div>
+				</div>
+				{{else}}
+				Please log in to add some tweets
+				{{/if}}
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="statistic">
+	<div class="col-md-4">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">My statistics</h3>
+			</div>
+			<div class="panel-body">
+				{{#with total}}
+					<p><strong>Neutral tweets:</strong> {{neu}} added</p>
+					<p><strong>Positive tweets:</strong> {{pos}} added</p>
+					<p><strong>Negative tweets:</strong> {{neg}} added</p>
+					<p><strong>Total progress:</strong> {{sum}} of {{todo}}</p>
+					<div class="progress">
+						<div class="progress-bar progress-bar-info" style="width: {{barneu}}%"></div>
+						<div class="progress-bar progress-bar-success" style="width: {{barpos}}%"></div>
+						<div class="progress-bar progress-bar-danger" style="width: {{barneg}}%"></div>
+					</div>
+				{{/with}}	
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="collaborate">
+	<h2>Tweets</h2>
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a href="#recentTweets" data-toggle="tab">Recent </a>
+		</li>
+		{{#if currentUser}}
+			<li>
+				<a href="#uncheckedTweets" data-toggle="tab">Unchecked <span class="badge">{{uncheckedSize}}</span></a>
+			</li>
+			<li>
+				<a href="#markedTweets" data-toggle="tab">Checked <span class="badge">{{checkedSize}}</span></a>
+			</li>
+			<li>
+				<a href="#addedTweets" data-toggle="tab">By me <span class="badge">{{addedSize}}</span></a>
+			</li>
+		{{/if}}
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="recentTweets">	
+			{{> recentTweetsTable}}
+		</div>
+		{{#if currentUser}}
+			<div class="tab-pane" id="uncheckedTweets">	
+				{{> uncheckedTweetsTable}}
+			</div>
+			<div class="tab-pane" id="markedTweets">	
+				{{> checkedTweetsTable}}
+			</div>
+			<div class="tab-pane" id="addedTweets">	
+				{{> addedTweetsTable}}
+			</div>
+		{{/if}}
+	</div>
+</template>
+
+<template name="recentTweetsTable">
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="col-sm-11">Text</th>
+				<th class="col-sm-1">Action</th>
+			</tr>
+		</thead>		
+		<tbody>
+			{{#each entries}}
+				{{> tweetEntry}}
+			{{/each}}
+		</tbody>
+	</table>
+</template>
+
+<template name="uncheckedTweetsTable">
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="col-sm-11">Text</th>
+				<th class="col-sm-1">Action</th>
+			</tr>
+		</thead>		
+		<tbody>
+			{{#each entries}}
+				{{> tweetEntry}}
+			{{/each}}
+		</tbody>
+	</table>
+</template>
+
+<template name="checkedTweetsTable">
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="col-sm-11">Text</th>
+				<th class="col-sm-1">Action</th>
+			</tr>
+		</thead>		
+		<tbody>
+			{{#each entries}}
+				{{> tweetEntry}}
+			{{/each}}
+		</tbody>
+	</table>
+</template>
+
+<template name="addedTweetsTable">
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="col-sm-11">Text</th>
+				<th class="col-sm-1">Action</th>
+			</tr>
+		</thead>		
+		<tbody>
+			{{#each entries}}
+				{{> tweetEntry}}
+			{{/each}}
+		</tbody>
+	</table>
+</template>
+
+<template name="tweetEntry">
+	<tr class="{{polarityClass}}">
+		<td title="Polarity: {{polarity}}">{{text}}</td>
+		{{#if currentUser}}
+			{{#if owner}}
+				<td>
+					<button type="button" class="btn btn-xs btn-danger deleteTweet">
+						<span class="glyphicon glyphicon-trash"></span>
+					</button>
+				</td>
+			{{else}}
+				<td>
+					<div>
+						<button type="button" class="btn btn-xs btn-{{feedbackCorrect}} correctTweet">
+							<span class="glyphicon glyphicon-ok"></span>
+						</button>
+						<button type="button" class="btn btn-xs btn-{{feedbackIncorrect}} incorrectTweet">
+							<span class="glyphicon glyphicon-ban-circle"></span>
+						</button>
+					</div>
+				</td>
+			{{/if}}
+		{{else}}
+			<td></td>
+		{{/if}}
+	</tr>
+</template>
