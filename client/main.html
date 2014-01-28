@@ -126,7 +126,7 @@
 
 <template name="collaborate">
 	<h2>Tweets</h2>
-	<ul class="nav nav-tabs">
+	<ul class="nav nav-tabs" id="tweetTabs">
 		<li class="active">
 			<a href="#recentTweets" data-toggle="tab">Recent </a>
 		</li>
@@ -190,6 +190,7 @@
 			{{/each}}
 		</tbody>
 	</table>
+	{{{pager}}}
 </template>
 
 <template name="checkedTweetsTable">
@@ -206,6 +207,7 @@
 			{{/each}}
 		</tbody>
 	</table>
+	{{{pager}}}
 </template>
 
 <template name="addedTweetsTable">
@@ -222,6 +224,7 @@
 			{{/each}}
 		</tbody>
 	</table>
+	{{{pager}}}
 </template>
 
 <template name="tweetEntry">

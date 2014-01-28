@@ -22,15 +22,18 @@ Meteor.methods({
 		var id = Random.id();
 
 		if (options.text.length < 20) {
-			Session.set('alert', { alert: 'danger', message: 'That was boring, gimme more'});
+			if(Meteor.isClient)
+				Session.set('alert', { alert: 'danger', message: 'That was boring, gimme more'});
 			return id;
 		}
 		if (options.text.length > 200) {
-			Session.set('alert', { alert: 'danger', message: 'Tweet is too long'});
+			if(Meteor.isClient)
+				Session.set('alert', { alert: 'danger', message: 'Tweet is too long'});
 			return id;
 		}
 		if (oldTweet(options.text)) {
-			Session.set('alert', { alert: 'danger', message: 'Similar tweet was added before'});
+			if(Meteor.isClient)
+				Session.set('alert', { alert: 'danger', message: 'Similar tweet was added before'});
 			return id;
 		}
 		if (! this.userId)
@@ -44,7 +47,8 @@ Meteor.methods({
 			polarity: options.polarity,
 			feedback: []
 		});
-		Session.set('alert', { alert: 'success', message: 'Tweet was added'});
+		if(Meteor.isClient)
+			Session.set('alert', { alert: 'success', message: 'Tweet was added'});
 		return id;
 	},
 	giveFeedback: function(tweetId, isCorrect) {

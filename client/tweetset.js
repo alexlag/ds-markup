@@ -86,14 +86,48 @@ Template.recentTweetsTable.entries = function() {
 	return cursor.fetch()
 }
 
+Pagination.prototype._bootstrap = function() {
+	var html = "";
+	if(!this._currentCount){
+		return html = "";
+	}
+	var data ='data-head="'+this._head+'" onclick="Pagination.goto(this)"';
+	html += '<div>' ;
+	html += '<ul class="pagination pagination-sm">';
+	html += '<li><a href="#"'+data+' data-page="1">«</a></li>';
+	for (var i = 1;i < this._totalPages + 1; i++) {
+	if(i !== this._currentPage){
+		html += '<li><a href="#" '+data+'data-page="'+i+'">'+i+'</a></li>'
+	}else{
+		html += '<li class="active"><a href="#" '+data+'data-page="'+i+'">'+i+'</a></li>'
+	}
+	}
+	html += '<li><a href="#" '+data+'data-page="'+this._totalPages+'">»</a></li>';
+	html += '</ul>';
+	html += '</div>'
+	return html;
+}
+
+var uncheckedPage = new Pagination("uncheckedTweets");
+
 Template.uncheckedTweetsTable.entries = function() {
 	var cursor = Tweets.find({
 		$and: [
 			{ creator: { $ne: Meteor.userId()}},
 			{ feedback: { $not: { $elemMatch: { user: Meteor.userId() } }}}
 		]
-	}, {sort: {created: -1}, limit: 10});
-	return cursor.fetch();
+	}, uncheckedPage.skip());
+	return cursor;
+}
+
+Template.uncheckedTweetsTable.pager = function() { 
+	var count = Tweets.find({
+		$and: [
+			{ creator: { $ne: Meteor.userId()}},
+			{ feedback: { $not: { $elemMatch: { user: Meteor.userId() } }}}
+		]
+	}).count();
+	return uncheckedPage.create(count);
 }
 
 Template.collaborate.uncheckedSize = function() {
@@ -106,14 +140,26 @@ Template.collaborate.uncheckedSize = function() {
 	return size == 0 ? '' : size;
 }
 
+var checkedPage = new Pagination("checkedTweets");
+
 Template.checkedTweetsTable.entries = function() {
 	var cursor = Tweets.find({
 		$and: [
 			{ creator: { $ne: Meteor.userId()}},
 			{ feedback: { $elemMatch: { user: Meteor.userId() } }}
 		]
-	}, {sort: {created: -1}, limit: 10});
-	return cursor.fetch();
+	}, checkedPage.skip());
+	return cursor;
+}
+
+Template.checkedTweetsTable.pager = function() { 
+	var count = Tweets.find({
+		$and: [
+			{ creator: { $ne: Meteor.userId()}},
+			{ feedback: { $elemMatch: { user: Meteor.userId() } }}
+		]
+	}).count();
+	return uncheckedPage.create(count);
 }
 
 Template.collaborate.checkedSize = function() {
@@ -126,9 +172,16 @@ Template.collaborate.checkedSize = function() {
 	return size == 0 ? '' : size;
 }
 
+var addedPage = new Pagination("addedTweets");
+
 Template.addedTweetsTable.entries = function() {
-	var cursor = Tweets.find({ creator: Meteor.userId() });
-	return cursor.fetch();
+	var cursor = Tweets.find({ creator: Meteor.userId()}, addedPage.skip() );
+	return cursor;
+}
+
+Template.addedTweetsTable.pager = function() {
+	var count = Tweets.find({ creator: Meteor.userId()}).count();
+	return uncheckedPage.create(count);	
 }
 
 Template.collaborate.addedSize = function() {
