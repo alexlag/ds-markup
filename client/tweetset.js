@@ -130,9 +130,9 @@ Pagination.prototype._bootstrap = function() {
 	html += '<li><a href="#Tweets"'+data+' data-page="1">«</a></li>';
 	for (var i = 1;i < this._totalPages + 1; i++) {
 	if(i !== this._currentPage){
-		html += '<li><a href="#" '+data+'data-page="'+i+'">'+i+'</a></li>'
+		html += '<li><a href="#Tweets" '+data+'data-page="'+i+'">'+i+'</a></li>'
 	}else{
-		html += '<li class="active"><a href="#" '+data+'data-page="'+i+'">'+i+'</a></li>'
+		html += '<li class="active"><a href="#Tweets" '+data+'data-page="'+i+'">'+i+'</a></li>'
 	}
 	}
 	html += '<li><a href="#Tweets" '+data+'data-page="'+this._totalPages+'">»</a></li>';
