@@ -87,10 +87,9 @@ Template.statistic.total = function() {
 }
 
 var selectedTab = function(option) {
-	var tab = Session.get('selectedTab');
 	if(option === undefined) 
-		return tab;
-	return option == tab ? 'active' : '';
+		return Session.get('selectedTab');
+	return option == Session.get('selectedTab') ? 'active' : '';
 }
 
 Template.collaborate.rendered = function() {
@@ -128,7 +127,7 @@ Pagination.prototype._bootstrap = function() {
 	var data ='data-head="'+this._head+'" onclick="Pagination.goto(this)"';
 	html += '<div>' ;
 	html += '<ul class="pagination pagination-sm">';
-	html += '<li><a href="#"'+data+' data-page="1">«</a></li>';
+	html += '<li><a href="#Tweets"'+data+' data-page="1">«</a></li>';
 	for (var i = 1;i < this._totalPages + 1; i++) {
 	if(i !== this._currentPage){
 		html += '<li><a href="#" '+data+'data-page="'+i+'">'+i+'</a></li>'
@@ -136,7 +135,7 @@ Pagination.prototype._bootstrap = function() {
 		html += '<li class="active"><a href="#" '+data+'data-page="'+i+'">'+i+'</a></li>'
 	}
 	}
-	html += '<li><a href="#" '+data+'data-page="'+this._totalPages+'">»</a></li>';
+	html += '<li><a href="#Tweets" '+data+'data-page="'+this._totalPages+'">»</a></li>';
 	html += '</ul>';
 	html += '</div>'
 	return html;
@@ -146,7 +145,7 @@ Pagination.prototype.sortedSkip = function() {
 	return $.extend(this.skip(), {sort: {created: -1}});
 }
 
-uncheckedPage = new Pagination("uncheckedTweets");
+var uncheckedPage = new Pagination("uncheckedTweets");
 
 Template.uncheckedTweetsTable.entries = function() {
 	var cursor = Tweets.find({
