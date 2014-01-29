@@ -121,7 +121,7 @@ Template.recentTweetsTable.entries = function() {
 
 Pagination.prototype._bootstrap = function() {
 	var html = "";
-	if(!this._currentCount){
+	if(!this._currentCount || this._totalPages < 2){
 		return html = "";
 	}
 	var data ='data-head="'+this._head+'" onclick="Pagination.goto(this)"';
