@@ -73,8 +73,10 @@ Meteor.methods({
 var oldTweet = function(text) {
 	var tweets = Tweets.find({}, {fields: {text: 1}}).fetch();
 	var index = tweets.length;
+	var firstSample = text.replace(/(https?:\/\/)\S+/g,"").toLowerCase(), secondSample;
 	while(index--) {
-		if(getEditDistance(tweets[index].text.toLowerCase(), text.toLowerCase()) < 20) {
+		secondSample = tweets[index].text.replace(/(https?:\/\/)\S+/g,"").toLowerCase();
+		if(getEditDistance(firstSample, secondSample) < 10) {
 			return true;
 		}
 	}
