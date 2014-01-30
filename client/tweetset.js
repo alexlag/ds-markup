@@ -72,8 +72,7 @@ Template.statistic.total = function() {
 		pos = Tweets.find({creator: Meteor.userId(), polarity: 'positive'}).count(),
 		neu = Tweets.find({creator: Meteor.userId(), polarity: 'neutral'}).count(),
 		neg = Tweets.find({creator: Meteor.userId(), polarity: 'negative'}).count();
-	var sum = pos + neu + neg
-		max = Math.max(total, sum);
+	var sum = Math.min(pos, pos_total) + Math.min(neu, neu_total) + Math.min(neg, neg_total);
 	return {
 		'todo': total,
 		'pos_progress': pos + ' of ' + pos_total,
@@ -112,6 +111,19 @@ Template.collaborate.isChecked = function() {
 
 Template.collaborate.isAdded = function() {
 	return selectedTab('addedTweets');
+}
+
+Template.collaborate.events({
+	'click #export': function(e) {
+		var pom = document.createElement('a');
+		pom.setAttribute('href', 'data:applicayion/json;charset=utf-8,' + encodeURIComponent(getTweetsJSONString()));
+		pom.setAttribute('download', 'tweets.json');
+		pom.click();
+	}
+});
+
+Template.collaborate.json = function() {
+	return encodeURIComponent(getTweetsJSONString());
 }
 
 Template.recentTweetsTable.entries = function() {
@@ -300,4 +312,19 @@ Template.tweetEntry.feedbackCorrect = function() {
 
 Template.tweetEntry.feedbackIncorrect = function() {
 	return feedbackButtonState(this) == -1 ? 'danger' : 'default';
+}
+
+getTweetsJSONString = function() {
+	var tweets = _.map(Tweets.find().fetch(), function(tweet) {
+		delete tweet['_id']
+		var sum = tweet.feedback.length,
+			pos = _.filter(tweet.feedback, function(el) {
+				return el.isCorrect;
+			}).length,
+			neg = sum - pos;
+		delete tweet['feedback'];
+		$.extend(tweet, { confirm: pos, denied: neg});
+		return tweet;
+	});
+	return JSON.stringify(tweets, null, '\t');
 }
