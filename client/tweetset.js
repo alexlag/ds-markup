@@ -257,7 +257,10 @@ Template.tweetEntry.events({
 });
 
 Template.tweetEntry.rendered = function() {
-	$('.infoTweet').popover();	
+	$('.infoTweet').popover({
+		placement: 'bottom',
+		trigger: 'hover',
+	});	
 }
 
 Template.tweetEntry.owner = function() {
