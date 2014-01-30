@@ -196,7 +196,7 @@ Template.checkedTweetsTable.pager = function() {
 			{ feedback: { $elemMatch: { user: Meteor.userId() } }}
 		]
 	}).count();
-	return uncheckedPage.create(count);
+	return checkedPage.create(count);
 }
 
 Template.collaborate.checkedSize = function() {
@@ -218,7 +218,7 @@ Template.addedTweetsTable.entries = function() {
 
 Template.addedTweetsTable.pager = function() {
 	var count = Tweets.find({ creator: Meteor.userId()}).count();
-	return uncheckedPage.create(count);	
+	return addedPage.create(count);	
 }
 
 Template.collaborate.addedSize = function() {
