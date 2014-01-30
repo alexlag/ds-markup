@@ -271,11 +271,15 @@ Template.tweetEntry.feedback = function() {
 	var sum = this.feedback.length,
 		pos = _.filter(this.feedback, function(el) {
 			return el.isCorrect;
-		}).length;
+		}).length,
+		neg = sum - pos,
+		cssClass;
+	cssClass = (pos == neg) ? 'default' : ((pos > neg) ? 'success' : 'warning') 
 	return {
 		pos: pos,
-		neg: sum - pos,
-		sum: sum
+		neg: neg,
+		sum: sum,
+		cssClass: cssClass 
 	}
 }
 
