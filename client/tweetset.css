@@ -2,10 +2,6 @@ body {
 	padding-top: 60px;
 }
 
-.correctTweet, .incorrectTweet {
+.correctTweet, .incorrectTweet, .deleteTweet, .infoTweet {
 	width: 42%;
-}
-
-.deleteTweet {
-	width: 90%;
 }

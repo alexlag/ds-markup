@@ -26,7 +26,7 @@ Meteor.methods({
 				Session.set('alert', { alert: 'danger', message: 'That was boring, gimme more'});
 			return id;
 		}
-		if (options.text.length > 200) {
+		if (options.text.replace(/(https?:\/\/)\S+/g,"").length > 160) {
 			if(Meteor.isClient)
 				Session.set('alert', { alert: 'danger', message: 'Tweet is too long'});
 			return id;

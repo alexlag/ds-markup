@@ -256,8 +256,24 @@ Template.tweetEntry.events({
 	}
 });
 
+Template.tweetEntry.rendered = function() {
+	$('.infoTweet').popover();	
+}
+
 Template.tweetEntry.owner = function() {
 	return this.creator === Meteor.userId();
+}
+
+Template.tweetEntry.feedback = function() {
+	var sum = this.feedback.length,
+		pos = _.filter(this.feedback, function(el) {
+			return el.isCorrect;
+		}).length;
+	return {
+		pos: pos,
+		neg: sum - pos,
+		sum: sum
+	}
 }
 
 var feedbackButtonState = function(e) {
