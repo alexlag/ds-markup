@@ -6,6 +6,30 @@ Meteor.startup(function() {
 	Session.set('selectedTab', 'recentTweets');
 });
 
+window.saveAs || ( window.saveAs = (window.navigator.msSaveBlob ? function(b,n){ return window.navigator.msSaveBlob(b,n); } : false) || window.webkitSaveAs || window.mozSaveAs || window.msSaveAs || (function(){
+	window.URL || (window.URL = window.webkitURL);
+	if(!window.URL){
+		return false;
+	}
+	return function(blob,name){
+		var url = URL.createObjectURL(blob);
+		if( "download" in document.createElement('a') ){
+			var a = document.createElement('a');
+			a.setAttribute('href', url);
+			a.setAttribute('download', name);
+			var clickEvent = document.createEvent ("MouseEvent");
+			clickEvent.initMouseEvent ("click", true, true, window, 0, 
+				0, 0, 0, 0,
+				false, false, false, false,
+				0, null);
+			a.dispatchEvent (clickEvent);
+		}
+		else{
+			window.open(url, '_blank', '');
+		}
+	};
+})() );
+
 displayAlert = function(message, type, timeout) {
 	var div = $('#addingAlert');
 	if(!type) type = 'info';
@@ -115,10 +139,7 @@ Template.collaborate.isAdded = function() {
 
 Template.collaborate.events({
 	'click #export': function(e) {
-		var pom = document.createElement('a');
-		pom.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(getTweetsJSONString()));
-		pom.setAttribute('download', 'tweets.json');
-		pom.click();
+		window.saveAs(new Blob([getTweetsJSONString()], {type: 'application/json'}), 'tweets.json');
 	}
 });
 
