@@ -116,7 +116,7 @@ Template.collaborate.isAdded = function() {
 Template.collaborate.events({
 	'click #export': function(e) {
 		var pom = document.createElement('a');
-		pom.setAttribute('href', 'data:applicayion/json;charset=utf-8,' + encodeURIComponent(getTweetsJSONString()));
+		pom.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(getTweetsJSONString()));
 		pom.setAttribute('download', 'tweets.json');
 		pom.click();
 	}
