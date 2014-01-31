@@ -20,9 +20,11 @@
 					{{> statistic}}
 				{{/if}}	
 			</div>
-			<div class="row">
-				{{> collaborate}}
-			</div>
+			{{#if currentUser}}
+				<div class="row">
+					{{> collaborate}}
+				</div>
+			{{/if}}
 		</div>
 	</div>
 </body>
@@ -134,33 +136,30 @@
 		<li class="{{isRecent}}">
 			<a href="#recentTweets" data-toggle="tab">Recent </a>
 		</li>
-		{{#if currentUser}}
-			<li class="{{isUnchecked}}">
-				<a href="#uncheckedTweets" data-toggle="tab">Unchecked <span class="badge">{{uncheckedSize}}</span></a>
-			</li>
-			<li class="{{isChecked}}">
-				<a href="#checkedTweets" data-toggle="tab">Checked <span class="badge">{{checkedSize}}</span></a>
-			</li>
-			<li class="{{isAdded}}">
-				<a href="#addedTweets" data-toggle="tab">By me <span class="badge">{{addedSize}}</span></a>
-			</li>
-		{{/if}}
+	
+		<li class="{{isUnchecked}}">
+			<a href="#uncheckedTweets" data-toggle="tab">Unchecked <span class="badge">{{uncheckedSize}}</span></a>
+		</li>
+		<li class="{{isChecked}}">
+			<a href="#checkedTweets" data-toggle="tab">Checked <span class="badge">{{checkedSize}}</span></a>
+		</li>
+		<li class="{{isAdded}}">
+			<a href="#addedTweets" data-toggle="tab">By me <span class="badge">{{addedSize}}</span></a>
+		</li>
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane {{isRecent}}" id="recentTweets">	
 			{{> recentTweetsTable}}
 		</div>
-		{{#if currentUser}}
-			<div class="tab-pane {{isUnchecked}}" id="uncheckedTweets">	
-				{{> uncheckedTweetsTable}}
-			</div>
-			<div class="tab-pane {{isChecked}}" id="checkedTweets">	
-				{{> checkedTweetsTable}}
-			</div>
-			<div class="tab-pane {{isAdded}}" id="addedTweets">	
-				{{> addedTweetsTable}}
-			</div>
-		{{/if}}
+		<div class="tab-pane {{isUnchecked}}" id="uncheckedTweets">	
+			{{> uncheckedTweetsTable}}
+		</div>
+		<div class="tab-pane {{isChecked}}" id="checkedTweets">	
+			{{> checkedTweetsTable}}
+		</div>
+		<div class="tab-pane {{isAdded}}" id="addedTweets">	
+			{{> addedTweetsTable}}
+		</div>
 	</div>
 </template>
 
