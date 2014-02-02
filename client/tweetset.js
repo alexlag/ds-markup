@@ -1,8 +1,40 @@
-Accounts.ui._options.passwordSignupFields = "EMAIL_ONLY";
-
 Meteor.subscribe('tweets');
 
 Meteor.startup(function() {
+	Accounts.ui._options = {
+	    requestPermissions: {},
+	    extraSignupFields: [
+	        {
+	            fieldName: 'fullname',
+	            fieldLabel: 'Full name',
+	            validate: function(value, errorFn) {
+	                if(!value) {
+	                    errorFn('Please provide full name');
+	                    return false;
+	                }
+	                return true;
+	            },
+	            visible: function() {
+	                return true;
+	            }
+	        },
+	        {
+	            fieldName: 'number',
+	            fieldLabel: 'Student Number',
+	            validate: function(value, errorFn) {
+	                if(!value || !value.match(/\d{8}/)) {
+	                    errorFn('Please provide legit student number');
+	                    return false;
+	                }
+	                return true;
+	            },
+	            visible: function() {
+	                return true;
+	            }
+	        }
+	    ]
+	};
+
 	Session.set('selectedTab', 'recentTweets');
 });
 
