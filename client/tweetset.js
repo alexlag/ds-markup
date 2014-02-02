@@ -12,6 +12,11 @@ Meteor.startup(function() {
 	                    errorFn('Please provide full name');
 	                    return false;
 	                }
+	                value = value.trim();
+	                if(!value.match(/\s/) || value.length < 5) {
+	                	errorFn('Thats probably not a full name');
+	                    return false;
+	                }
 	                return true;
 	            },
 	            visible: function() {
