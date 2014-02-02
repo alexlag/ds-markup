@@ -23,20 +23,29 @@ Meteor.methods({
 
 		if (options.text.length < 10) {
 			if(Meteor.isClient)
-				Session.set('alert', { alert: 'danger', message: 'That was boring, gimme more'});
+				Session.set('alert', { 
+					alert: 'danger', 
+					message: 'That was boring, gimme more'
+				});
 			return id;
 		}
 		if (options.text.replace(/(https?:\/\/)\S+/g,"").length > 160) {
 			if(Meteor.isClient)
-				Session.set('alert', { alert: 'danger', message: 'Tweet is too long'});
+				Session.set('alert', { 
+					alert: 'danger',
+					message: 'Tweet is too long'
+				});
 			return id;
 		}
 		if (oldTweet(options.text)) {
 			if(Meteor.isClient)
-				Session.set('alert', { alert: 'danger', message: 'Similar tweet was added before'});
+				Session.set('alert', { 
+					alert: 'danger', 
+					message: 'Similar tweet was added before'
+				});
 			return id;
 		}
-		if (! this.userId)
+		if (!this.userId)
 			throw new Meteor.Error(403, 'You must be logged in');
 
 		Tweets.insert({
@@ -48,7 +57,10 @@ Meteor.methods({
 			feedback: []
 		});
 		if(Meteor.isClient)
-			Session.set('alert', { alert: 'success', message: 'Tweet was added'});
+			Session.set('alert', { 
+				alert: 'success', 
+				message: 'Tweet was added'
+			});
 		return id;
 	},
 	giveFeedback: function(tweetId, isCorrect) {

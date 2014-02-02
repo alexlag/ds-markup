@@ -78,15 +78,30 @@
 			</div>
 			<div class="panel-body">
 				{{#with total}}
-					<p><strong>Neutral tweets:</strong> {{neu_progress }} added</p>
+					<p>
+						<strong>Neutral tweets:</strong> {{neu_progress }} added 
+						{{#if neu_done}}
+							<span class="glyphicon glyphicon-ok" style="color: #5cb85c"></span>
+						{{/if}}
+					</p>
 					<div class="progress">
 						<div class="progress-bar progress-bar-info" style="width: {{barneu}}%"></div>
 					</div>
-					<p><strong>Positive tweets:</strong> {{pos_progress}} added</p>
+					<p>
+						<strong>Positive tweets:</strong> {{pos_progress}} added
+						{{#if pos_done}}
+							<span class="glyphicon glyphicon-ok" style="color: #5cb85c"></span>
+						{{/if}}
+					</p>
 					<div class="progress">
 						<div class="progress-bar progress-bar-success" style="width: {{barpos}}%"></div>
 					</div>
-					<p><strong>Negative tweets:</strong> {{neg_progress}} added</p>
+					<p>
+						<strong>Negative tweets:</strong> {{neg_progress}} added
+						{{#if neg_done}}
+							<span class="glyphicon glyphicon-ok" style="color: #5cb85c"></span>
+						{{/if}}
+					</p>
 					<div class="progress">
 						<div class="progress-bar progress-bar-danger" style="width: {{barneg}}%"></div>
 					</div>
