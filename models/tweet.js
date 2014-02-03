@@ -79,6 +79,14 @@ Meteor.methods({
 		} else {
 			Tweets.update(tweetId, {$push: {feedback: {user: this.userId, isCorrect: isCorrect}}});
 		}
+	},
+	jobDone: function() {
+		if(Meteor.user &&
+			Tweets.find({creator: Meteor.userId(), polarity: 'neutral'}).count() >= 50 &&
+			Tweets.find({creator: Meteor.userId(), polarity: 'positive'}).count() >= 25 &&
+			Tweets.find({creator: Meteor.userId(), polarity: 'negative'}).count() >= 25)
+			return true;
+		return false;
 	}
 });
 

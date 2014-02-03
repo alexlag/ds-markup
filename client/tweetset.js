@@ -89,8 +89,9 @@ var parseAndAddTweet = function(polarity) {
 	});
 	var res = Session.get('alert');
 	displayAlert(res.message, res.alert, 2000);
-	if(res.alert == 'success') 
+	if(res.alert == 'success') {
 		$(inputSelector).val('');
+	}
 	return false;
 }
 

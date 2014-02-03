@@ -13,11 +13,14 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand">Markup</a>
+				<a href="{{pathFor 'home'}}" class="navbar-brand">Markup</a>
 			</div>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav nav">
-					<li class="active"><a>Twitter</a></li>
+					<li class="{{twitterClass}}"><a href="{{pathFor 'twitter'}}">Twitter</a></li>
+				</ul>
+				<ul class="navbar-nav nav">
+					<li class="{{submissionClass}}"><a href="{{pathFor 'submissions'}}">Submissions</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					{{loginButtons}}

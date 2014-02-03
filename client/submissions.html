@@ -1,0 +1,21 @@
+<template name="submissions">
+	<div class="container">
+		<div class="row-fluid marketing"> 
+			<div class="alert alert-success" id="globalAlert" style="display: none"></div>
+			<div class="page-header">
+				<h1>Program Submission</h1>
+			</div>
+			{{#if isReady}}
+				{{> newSubmission}}
+			{{else}}
+				You are not prepared
+			{{/if}}
+		</div>
+	</div>
+</template>
+
+<template name="newSubmission">
+	<div>
+		Under construction
+	</div>
+</template>
