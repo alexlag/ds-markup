@@ -9,6 +9,11 @@ Router.map(function () {
 		before: function() {
 			document.title = 'Twitter Markup';
 		},
+		waitOn: function() {
+			Meteor.call('jobDone', function(err, result) {
+				Session.set('jobDone', err ? false : result);
+			});
+		},
 		data: {
 			twitterClass: 'active'
 		},

@@ -134,6 +134,9 @@ Template.statistic.total = function() {
 		neu = Tweets.find({creator: Meteor.userId(), polarity: 'neutral'}).count(),
 		neg = Tweets.find({creator: Meteor.userId(), polarity: 'negative'}).count();
 	var sum = Math.min(pos, pos_total) + Math.min(neu, neu_total) + Math.min(neg, neg_total);
+	Meteor.call('jobDone', function(err, result) {
+		Session.set('jobDone', err ? false : result);
+	});
 	return {
 		todo: total,
 		pos_progress: pos + ' of ' + pos_total,
@@ -270,6 +273,10 @@ Template.checkedTweetsTable.pager = function() {
 		]
 	}).count();
 	return checkedPage.create(count);
+}
+
+Template.collaborate.exportButton = function() {
+	return Session.get('jobDone') ? '<a id="export" class="btn btn-sm btn-default">Export</a>' : ''
 }
 
 Template.collaborate.checkedSize = function() {

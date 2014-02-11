@@ -1,7 +1,7 @@
 Meteor.subscribe('mySubmissions');
 
 Template.submissions.isReady = function() {
-	return true || Session.get('jobDone');
+	return Session.get('jobDone');
 }
 
 Template.newSubmission.canAdd = function() {
