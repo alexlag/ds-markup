@@ -1,3 +1,4 @@
 Meteor.publish("tweets", function () {
-	return Tweets.find({}, {});
+	if(this.userId)
+		return Tweets.find({}, {});
 });

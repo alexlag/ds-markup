@@ -24,9 +24,12 @@ Router.map(function () {
 			Meteor.call('jobDone', function(err, result) {
 				Session.set('jobDone', err ? false : result);
 			});
+			Meteor.call('weekUploads', function(err, result) {
+				Session.set('weekUploads', err ? 0 : result);
+			});
 		},
 		data: {
-			submissionsClass: 'active'
+			submissionClass: 'active'
 		},
 		template: 'submissions'
 	});

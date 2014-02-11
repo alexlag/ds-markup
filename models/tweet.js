@@ -50,7 +50,7 @@ Meteor.methods({
 
 		Tweets.insert({
 			_id: id,
-			created: options.created,
+			created: new Date().getTime(),
 			creator: this.userId,
 			text: options.text,
 			polarity: options.polarity,

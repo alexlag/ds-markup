@@ -83,7 +83,6 @@ displayAlert = function(message, type, timeout) {
 var parseAndAddTweet = function(polarity) {
 	var inputSelector = '#input' + polarity.charAt(0).toUpperCase() + polarity.slice(1);
 	addTweet({
-		created: new Date().getTime(),
 		text: $(inputSelector).val(),
 		polarity: polarity
 	});
@@ -215,8 +214,8 @@ Pagination.prototype._bootstrap = function() {
 	return html;
 }
 
-Pagination.prototype.sortedSkip = function() {
-	return $.extend(this.skip(), {sort: {created: -1}});
+Pagination.prototype.sortedSkip = function(order) {
+	return $.extend(this.skip(), {sort: {created: order}});
 }
 
 var uncheckedPage = new Pagination("uncheckedTweets");
@@ -227,7 +226,7 @@ Template.uncheckedTweetsTable.entries = function() {
 			{ creator: { $ne: Meteor.userId()}},
 			{ feedback: { $not: { $elemMatch: { user: Meteor.userId() } }}}
 		]
-	}, uncheckedPage.sortedSkip());
+	}, uncheckedPage.sortedSkip(1));
 	return cursor;
 }
 
@@ -259,7 +258,7 @@ Template.checkedTweetsTable.entries = function() {
 			{ creator: { $ne: Meteor.userId()}},
 			{ feedback: { $elemMatch: { user: Meteor.userId() } }}
 		]
-	}, checkedPage.sortedSkip());
+	}, checkedPage.sortedSkip(-1));
 	return cursor;
 }
 
@@ -286,7 +285,7 @@ Template.collaborate.checkedSize = function() {
 var addedPage = new Pagination("addedTweets");
 
 Template.addedTweetsTable.entries = function() {
-	var cursor = Tweets.find({ creator: Meteor.userId()}, addedPage.sortedSkip() );
+	var cursor = Tweets.find({ creator: Meteor.userId()}, addedPage.sortedSkip(-1) );
 	return cursor;
 }
 
@@ -323,7 +322,7 @@ Template.tweetEntry.events({
 	},
 	'click .deleteTweet': function(e) {
 		var result = confirm("Are you sure?");
-		if (result == true) {
+		if (result === true) {
 			Tweets.remove(this._id);
 		}
 		e.preventDefault();
@@ -386,6 +385,7 @@ getTweetsJSONString = function() {
 			neg = sum - pos;
 		delete tweet['feedback'];
 		$.extend(tweet, { confirm: pos, denied: neg});
+		tweet.created = new Date(tweet.created);
 		return tweet;
 	});
 	return JSON.stringify(tweets, null, '\t');

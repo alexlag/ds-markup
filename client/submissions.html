@@ -1,4 +1,5 @@
 <template name="submissions">
+	{{#if currentUser}}
 	<div class="container">
 		<div class="row-fluid marketing"> 
 			<div class="alert alert-success" id="globalAlert" style="display: none"></div>
@@ -7,15 +8,60 @@
 			</div>
 			{{#if isReady}}
 				{{> newSubmission}}
+				{{> oldSubmissions}}
 			{{else}}
 				You are not prepared
 			{{/if}}
 		</div>
 	</div>
+	{{/if}}
 </template>
 
 <template name="newSubmission">
-	<div>
-		Under construction
+	<div class="col-md-6">
+		<div class="panel panel-info">
+			<div class="alert alert-success" id="submissionAlert" style="display: none"></div>
+			<div class="panel-heading">New submission</div>
+			<div class="panel-body">
+			{{#if canAdd}}
+				<p>Uploads since last thursday: {{uploadCount}} of 10</p>
+				<input name="file" type="file" class="fileUploader">
+				<p class="help-block">Restriction info</p>
+			{{else}}
+				<p>You can't upload any more submissions this week</p>
+			{{/if}}
+			</div>
+		</div>
 	</div>
+</template>
+
+<template name="oldSubmissions">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">Results</div>
+			<div class="panel-body">
+
+			</div>
+			<table class="table table-stripped">
+				<thead>
+					<th>Name</th>
+					<th>Date</th>
+					<th>Result</th>
+				</thead>
+				<tbody>
+					{{#each entries}}
+						{{> submissionResult}}
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</template>
+
+<template name="submissionResult">
+	<tr>
+		<td>{{filename}}</td>
+		<td>{{date}}</td>
+		<td>{{result}}</td>
+	</tr>
 </template>
