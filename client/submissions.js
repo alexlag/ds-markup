@@ -34,8 +34,8 @@ Template.submissionResult.date = function() {
 }
 
 Template.submissionResult.result = function() {
-	if(this.metadata && this.metadata.result)
-		return this.metadata.result;
-	else
-		return 'Not available'
+	Meteor.call('subResult', this._id, function(err, res) {
+		Session.set('upl' + this._id, err ? 'No data' : res);
+	});
+	return Session.get('upl' + this._id);
 }

@@ -4,7 +4,7 @@ Meteor.publish('mySubmissions', function() {
 	}
 });
 
-var jailServer = "http://172.31.189.134:3000/submit";
+var jailServer = "http://172.31.189.134:3000/";
 
 var getTweetsJSONString = function(userId) {
 	var tweets = _.map(Tweets.find().fetch(), function(tweet) {
@@ -30,7 +30,7 @@ Meteor.methods({
 	"uploadToJail": function(options) {
 			var owner = options.fileRecord.owner;
 			var email = Meteor.users.findOne({_id: owner}).emails[0].address;
-			var result = HTTP.call("POST", jailServer, {
+			var result = HTTP.call("POST", jailServer + "submit.json", {
 				data: {
 					submission: {
 						mongoId: options.fileRecord._id,
@@ -48,6 +48,10 @@ Meteor.methods({
 				timeout: 10000
 			});
 			return jailServer + '/' + options.fileRecord._id;
+	},
+	"subResult": function(fileId) {
+		var result = HTTP.call("GET", jailServer + "status/" + fileId + '.json');
+		return result.result;
 	},
 	"getLineDate": function() {
 		return getLineDate();

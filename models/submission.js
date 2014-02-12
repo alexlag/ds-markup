@@ -17,7 +17,7 @@ SubmissionsFS.allow({
 });
 
 Meteor.methods({
-	weekUploads: function() {
+	'weekUploads': function() {
 		if(Meteor.isServer && Meteor.user) {
 			return weekUploadsUser(Meteor.userId);
 		}
