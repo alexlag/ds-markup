@@ -4,7 +4,7 @@ Meteor.publish('mySubmissions', function() {
 	}
 });
 
-var jailServer = "http://172.31.189.134:3000/submissions";
+var jailServer = "http://172.31.189.134:3000/submit";
 
 var getTweetsJSONString = function(userId) {
 	var tweets = _.map(Tweets.find().fetch(), function(tweet) {
