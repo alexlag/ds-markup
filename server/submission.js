@@ -31,8 +31,18 @@ Meteor.methods({
 					submission: {
 						mongoId: options.fileRecord._id,
 						email: email,
-						upload: options.blob,
-						train: getTweetsJSONString(owner)
+						upload: {
+							fname: options.fileRecord.filename,
+							data: options.blob,
+							processData: false,
+							contentType: false
+						},
+						train: {
+							fname: 'tweets.json',
+							data: getTweetsJSONString(owner),
+							processData: false,
+							contentType: false
+						}
 					}
 				},
 				timeout: 10000
