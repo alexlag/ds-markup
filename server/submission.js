@@ -50,7 +50,7 @@ SubmissionsFS.fileHandlers({
 var getLineDate = function() {
 	var lineDate = new Date();
 	lineDate.setHours(0); lineDate.setMinutes(0); lineDate.setSeconds(0); lineDate.setMilliseconds(0);  
-	while(lineDate.getDay() != 4) {
+	while(lineDate.getDay() != 3) {
 		lineDate.setDate(lineDate.getDate() - 1); 
 	}
 	return lineDate;
