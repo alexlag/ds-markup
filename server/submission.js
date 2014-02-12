@@ -51,8 +51,7 @@ Meteor.methods({
 	},
 	"subResult": function(fileId) {
 		var result = HTTP.call("GET", jailServer + "status/" + fileId + '.json');
-		console.log(result);
-		return result.result;
+		return result.statusCode != 200 ? result.content : result.data.result;
 	},
 	"getLineDate": function() {
 		return getLineDate();
