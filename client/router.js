@@ -32,6 +32,11 @@ Router.map(function () {
 			Meteor.call('weekUploads', function(err, result) {
 				Session.set('weekUploads', err ? 0 : result);
 			});
+			SubmissionsFS.find().forEach(function(sub){
+				Meteor.call('subResult', sub._id, function(err, res) {
+					Session.set('upl' + sub._id, err ? 'No data' : res);
+				});
+			});
 		},
 		data: {
 			submissionClass: 'active'
