@@ -45,7 +45,7 @@ Meteor.methods({
 				},
 				headers: {
 					'Content-Type': 'multipart/form-data'
-				}
+				},
 				timeout: 10000
 			});
 			return jailServer + '/' + options.fileRecord._id;
