@@ -49,6 +49,9 @@ Meteor.methods({
 				timeout: 10000
 			});
 			return jailServer + '/' + options.fileRecord._id;
+	},
+	"getLineDate": function() {
+		return getLineDate();
 	}
 })
 

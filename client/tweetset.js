@@ -382,6 +382,15 @@ Template.tweetEntry.feedbackIncorrect = function() {
 	return feedbackButtonState(this) == -1 ? 'danger' : 'default';
 }
 
+var getLineDate = function() {
+	var lineDate = new Date();
+	lineDate.setHours(0); lineDate.setMinutes(0); lineDate.setSeconds(0); lineDate.setMilliseconds(0);  
+	while(lineDate.getDay() != 3) {
+		lineDate.setDate(lineDate.getDate() - 1); 
+	}
+	return lineDate;
+}
+
 getTweetsJSONString = function() {
 	var tweets = _.map(Tweets.find().fetch(), function(tweet) {
 		delete tweet['_id']
@@ -394,6 +403,10 @@ getTweetsJSONString = function() {
 		$.extend(tweet, { confirm: pos, denied: neg});
 		tweet.created = new Date(tweet.created);
 		return tweet;
+	});
+	var lineDate = getLineDate();
+	tweets = _.filter(tweets, function(tweet) {
+		return (tweet.created <= lineDate) || (tweet.creator === Meteor.userId());
 	});
 	return JSON.stringify(tweets, null, '\t');
 }
