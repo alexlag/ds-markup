@@ -400,7 +400,7 @@ getTweetsJSONString = function() {
 			}).length,
 			neg = sum - pos;
 		delete tweet['feedback'];
-		$.extend(tweet, { confirm: pos, denied: neg});
+		_.extend(tweet, { confirm: pos, denied: neg});
 		tweet.created = new Date(tweet.created);
 		return tweet;
 	});

@@ -19,7 +19,11 @@ var getTweetsJSONString = function(userId) {
 		tweet.created = new Date(tweet.created);
 		return tweet;
 	});
-	return JSON.stringify(tweets, null, '\t');
+	var lineDate = getLineDate();
+	tweets = _.filter(tweets, function(tweet) {
+		return (tweet.created <= lineDate) || (tweet.creator === Meteor.userId());
+	});
+	return JSON.stringify(tweets);
 }
 
 Meteor.methods({
@@ -33,18 +37,13 @@ Meteor.methods({
 						email: email,
 						upload: {
 							filename: options.fileRecord.filename,
-							data: options.blob,
-							'Content-Type': 'application/octet-stream'
+							data: options.blob
 						},
 						train: {
 							filename: 'tweets.json',
-							data: getTweetsJSONString(owner),
-							'Content-Type': 'application/octet-stream'
+							data: getTweetsJSONString(owner)
 						}
 					}
-				},
-				headers: {
-					'Content-Type': 'multipart/form-data'
 				},
 				timeout: 10000
 			});
