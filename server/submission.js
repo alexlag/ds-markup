@@ -32,19 +32,20 @@ Meteor.methods({
 						mongoId: options.fileRecord._id,
 						email: email,
 						upload: {
-							fname: options.fileRecord.filename,
+							filename: options.fileRecord.filename,
 							data: options.blob,
-							processData: false,
-							contentType: false
+							'Content-Type': 'application/octet-stream'
 						},
 						train: {
-							fname: 'tweets.json',
+							filename: 'tweets.json',
 							data: getTweetsJSONString(owner),
-							processData: false,
-							contentType: false
+							'Content-Type': 'application/octet-stream'
 						}
 					}
 				},
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
 				timeout: 10000
 			});
 			return jailServer + '/' + options.fileRecord._id;
