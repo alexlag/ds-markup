@@ -27,17 +27,7 @@ var getTweetsJSONString = function(userId) {
 }
 
 Meteor.methods({
-	"subResult": function(fileId) {
-		var result = HTTP.call("GET", jailServer + "status/" + fileId + '.json');
-		return result.statusCode != 200 ? 'Error ' + result.content : result.data.result;
-	},
-	"getLineDate": function() {
-		return getLineDate();
-	}
-})
-
-SubmissionsFS.fileHandlers({
-	"sendToJail": function (options) {
+	"uploadFiles": function(option) {
 		var owner = options.fileRecord.owner;
 		var email = Meteor.users.findOne({_id: owner}).emails[0].address;
 		try {
@@ -63,6 +53,19 @@ SubmissionsFS.fileHandlers({
 			return false;
 		}
 		return jailServer + '/' + options.fileRecord._id;
+	},
+	"subResult": function(fileId) {
+		var result = HTTP.call("GET", jailServer + "status/" + fileId + '.json');
+		return result.statusCode != 200 ? 'Error ' + result.content : result.data.result;
+	},
+	"getLineDate": function() {
+		return getLineDate();
+	}
+})
+
+SubmissionsFS.fileHandlers({
+	"sendToJail": function (options) {
+		return Meteor.call("uploadFiles", options);	
 	}
 });
 
