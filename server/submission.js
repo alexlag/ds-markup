@@ -27,31 +27,26 @@ var getTweetsJSONString = function(userId) {
 }
 
 Meteor.methods({
-	"uploadFiles": function(option) {
+	"uploadFiles": function(options) {
 		var owner = options.fileRecord.owner;
 		var email = Meteor.users.findOne({_id: owner}).emails[0].address;
-		try {
-			var result = HTTP.call("POST", jailServer + "submit.json", {
-				data: {
-					submission: {
-						mongoId: options.fileRecord._id,
-						email: email,
-						upload: {
-							filename: options.fileRecord.filename,
-							data: options.blob
-						},
-						train: {
-							filename: 'tweets.json',
-							data: getTweetsJSONString(owner)
-						}
+		var result = HTTP.call("POST", jailServer + "submit.json", {
+			data: {
+				submission: {
+					mongoId: options.fileRecord._id,
+					email: email,
+					upload: {
+						filename: options.fileRecord.filename,
+						data: options.blob
+					},
+					train: {
+						filename: 'tweets.json',
+						data: getTweetsJSONString(owner)
 					}
-				},
-				timeout: 10000
-			});
-		} catch(e) {
-			console.log('HERE ', e);
-			return false;
-		}
+				}
+			},
+			timeout: 10000
+		});
 		return jailServer + '/' + options.fileRecord._id;
 	},
 	"subResult": function(fileId) {
