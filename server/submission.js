@@ -59,7 +59,7 @@ SubmissionsFS.fileHandlers({
 				timeout: 10000
 			});
 		} catch(e) {
-			console.log(e);
+			console.log('HERE ', e);
 			return false;
 		}
 		return jailServer + '/' + options.fileRecord._id;

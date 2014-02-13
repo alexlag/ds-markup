@@ -1,4 +1,4 @@
-SubmissionsFS = new CollectionFS('submissions');
+SubmissionsFS = new CollectionFS('submissions', { autopublish: false });
 
 SubmissionsFS.filter({
 	allow: {
@@ -21,7 +21,7 @@ SubmissionsFS.events({
 
 SubmissionsFS.allow({
 	insert: function(userId, file) { 
-		return userId && file.owner === userId && weekUploadsUser(userId) < 10;
+		return userId && (file.owner === userId) && (weekUploadsUser(userId) < 10);
 	},
 	update: function(userId, file, fields, modifier) {
 		return false;
@@ -34,7 +34,7 @@ SubmissionsFS.allow({
 Meteor.methods({
 	'weekUploads': function() {
 		if(Meteor.isServer && Meteor.user) {
-			return weekUploadsUser(Meteor.userId);
+			return weekUploadsUser(Meteor.userId());
 		}
 	}
 })
