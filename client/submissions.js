@@ -17,7 +17,13 @@ Template.newSubmission.events({
 		var files = e.target.files;
 		var result = confirm("Do you really want to upload " + files[0].name + "?");
 		if (result === true) {
-			SubmissionsFS.storeFile(files[0]);
+			try {
+				SubmissionsFS.storeFile(files[0]);
+				displayAlert("File is uploading", 'success', 2000);
+			} catch(e) {
+				displayAlert("File can not be uploaded", 'danger', 2000);
+				console.log(e);
+			}
 		}
 		Meteor.call('weekUploads', function(err, result) {
 			Session.set('weekUploads', err ? 0 : result);

@@ -20,13 +20,13 @@
 <template name="newSubmission">
 	<div class="col-md-6">
 		<div class="panel panel-info">
-			<div class="alert alert-success" id="submissionAlert" style="display: none"></div>
 			<div class="panel-heading">New submission</div>
 			<div class="panel-body">
+			<div class="alert alert-success" id="addingAlert" style="display: none"></div>
 			{{#if canAdd}}
 				<p>Uploads since last wednesday: {{uploadCount}} of 10</p>
 				<input name="file" type="file" class="fileUploader">
-				<p class="help-block">Restriction info</p>
+				<p class="help-block">Zip-archive, no more than 15Mb</p>
 			{{else}}
 				<p>You can't upload any more submissions this week</p>
 			{{/if}}

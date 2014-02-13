@@ -1,7 +1,23 @@
 SubmissionsFS = new CollectionFS('submissions');
 
 SubmissionsFS.filter({
-	maxSize: 1048576
+	allow: {
+        extensions: ['zip'],
+        contentTypes: ['application/x-zip-compressed']
+    },
+	maxSize: 15728640
+});
+
+SubmissionsFS.events({
+	'invalid': function(type, fileRecord) {
+		if(Meteor.isClient) {
+			if (type === CFSErrorType.disallowedContentType || type === CFSErrorType.disallowedExtension) {
+				displayAlert('File is not a zip-archive', 'danger', 2000);
+			} else if (type === CFSErrorType.maxFileSizeExceeded) {
+				displayAlert("File is too big to upload.", 'danger',2000);
+			}
+		}
+	} 
 });
 
 SubmissionsFS.allow({
