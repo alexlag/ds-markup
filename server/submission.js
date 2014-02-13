@@ -50,7 +50,7 @@ Meteor.methods({
 			});
 			return jailServer + 'status/' + options.fileRecord._id + '.json';
 		} catch(e) {
-			return e.toString();
+			return false;
 		}
 	},
 	"subResult": function(fileId) {
@@ -64,7 +64,12 @@ Meteor.methods({
 
 SubmissionsFS.fileHandlers({
 	"sendToJail": function (options) {
-		return Meteor.call("uploadFiles", options);	
+		var result = false;
+		Meteor.call("uploadFiles", options, function(err, res) {
+			if(err) console.log(err);
+			result = err ? false : res; 
+		});	
+		return result;
 	}
 });
 
