@@ -21,7 +21,7 @@ var getTweetsJSONString = function(userId) {
 	});
 	var lineDate = getLineDate();
 	tweets = _.filter(tweets, function(tweet) {
-		return (tweet.created <= lineDate) || (tweet.creator === Meteor.userId());
+		return (tweet.created <= lineDate) || (tweet.creator === userId);
 	});
 	return JSON.stringify(tweets);
 }
