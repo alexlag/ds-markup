@@ -30,24 +30,28 @@ Meteor.methods({
 	"uploadFiles": function(options) {
 		var owner = options.fileRecord.owner;
 		var email = Meteor.users.findOne({_id: owner}).emails[0].address;
-		var result = HTTP.call("POST", jailServer + "submit.json", {
-			data: {
-				submission: {
-					mongoId: options.fileRecord._id,
-					email: email,
-					upload: {
-						filename: options.fileRecord.filename,
-						data: options.blob
-					},
-					train: {
-						filename: 'tweets.json',
-						data: getTweetsJSONString(owner)
+		try {
+			var result = HTTP.call("POST", jailServer + "submit.json", {
+				data: {
+					submission: {
+						mongoId: options.fileRecord._id,
+						email: email,
+						upload: {
+							filename: options.fileRecord.filename,
+							data: options.blob
+						},
+						train: {
+							filename: 'tweets.json',
+							data: getTweetsJSONString(owner)
+						}
 					}
-				}
-			},
-			timeout: 10000
-		});
-		return jailServer + '/' + options.fileRecord._id;
+				},
+				timeout: 10000
+			});
+			return jailServer + 'status/' + options.fileRecord._id + '.json';
+		} catch(e) {
+			return null;
+		}
 	},
 	"subResult": function(fileId) {
 		var result = HTTP.call("GET", jailServer + "status/" + fileId + '.json');

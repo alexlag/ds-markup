@@ -19,7 +19,6 @@ Template.newSubmission.events({
 		if (result === true) {
 			try {
 				SubmissionsFS.storeFile(files[0]);
-				displayAlert("File is uploading", 'success', 2000);
 			} catch(e) {
 				displayAlert("File can not be uploaded", 'danger', 2000);
 				console.log(e);
