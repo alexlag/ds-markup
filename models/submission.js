@@ -2,8 +2,7 @@ SubmissionsFS = new CollectionFS('submissions');
 
 SubmissionsFS.filter({
 	allow: {
-        extensions: ['zip'],
-        contentTypes: ['application/x-zip-compressed']
+        extensions: ['zip']
     },
 	maxSize: 15728640
 });
