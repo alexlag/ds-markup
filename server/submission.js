@@ -37,7 +37,7 @@ Meteor.methods({
 						mongoId: options.fileRecord._id,
 						email: email,
 						upload: {
-							filename: options.fileRecord.filename,
+							filename: 'archive.zip',
 							data: options.blob
 						},
 						train: {
@@ -50,7 +50,7 @@ Meteor.methods({
 			});
 			return jailServer + 'status/' + options.fileRecord._id + '.json';
 		} catch(e) {
-			return null;
+			return e.toString();
 		}
 	},
 	"subResult": function(fileId) {
