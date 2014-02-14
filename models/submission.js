@@ -16,7 +16,13 @@ SubmissionsFS.events({
 				displayAlert("File is too big to upload.", 'danger',2000);
 			}
 		}
-	} 
+	},
+	'ready': function() {
+		console.log('ready');
+	},
+	'start': function() {
+		console.log('start');
+	}
 });
 
 SubmissionsFS.allow({

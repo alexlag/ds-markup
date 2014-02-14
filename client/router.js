@@ -7,9 +7,8 @@ Router.map(function () {
 	this.route('twitter', {
 		path: '/twitter',
 		before: function() {
+			$('#initLoad').hide();
 			document.title = 'Twitter Markup';
-		},
-		waitOn: function() {
 			Meteor.call('jobDone', function(err, result) {
 				Session.set('jobDone', err ? false : result);
 			});
@@ -23,9 +22,8 @@ Router.map(function () {
 	this.route('submissions', {
 		path: '/submissions',
 		before: function() {
+			$('#initLoad').hide();
 			document.title = 'Sentanal Submissions';
-		},
-		waitOn: function() {
 			Meteor.call('jobDone', function(err, result) {
 				Session.set('jobDone', err ? false : result);
 			});
