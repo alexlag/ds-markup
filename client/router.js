@@ -7,7 +7,6 @@ Router.map(function () {
 	this.route('twitter', {
 		path: '/twitter',
 		before: function() {
-			$('#initLoad').hide();
 			document.title = 'Twitter Markup';
 			Meteor.call('jobDone', function(err, result) {
 				Session.set('jobDone', err ? false : result);
@@ -22,7 +21,6 @@ Router.map(function () {
 	this.route('submissions', {
 		path: '/submissions',
 		before: function() {
-			$('#initLoad').hide();
 			document.title = 'Sentanal Submissions';
 			Meteor.call('jobDone', function(err, result) {
 				Session.set('jobDone', err ? false : result);
