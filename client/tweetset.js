@@ -1,5 +1,3 @@
-Meteor.subscribe('tweets');
-
 Meteor.startup(function() {
 	Accounts.ui._options = {
 	    requestPermissions: {},

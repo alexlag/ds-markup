@@ -7,6 +7,13 @@ Router.map(function () {
 	this.route('twitter', {
 		path: '/twitter',
 		before: function() {
+			var handle = Meteor.subscribe('tweets');
+			if(handle.ready()) {
+				NProgress.done();
+			} else {
+				NProgress.start();
+				this.stop();
+			}
 			document.title = 'Twitter Markup';
 			Meteor.call('jobDone', function(err, result) {
 				Session.set('jobDone', err ? false : result);
@@ -21,6 +28,13 @@ Router.map(function () {
 	this.route('submissions', {
 		path: '/submissions',
 		before: function() {
+			var handle = Meteor.subscribe('mySubmissions');
+			if(handle.ready()) {
+				NProgress.done();
+			} else {
+				NProgress.start();
+				this.stop();
+			}
 			document.title = 'Sentanal Submissions';
 			Meteor.call('jobDone', function(err, result) {
 				Session.set('jobDone', err ? false : result);
