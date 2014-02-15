@@ -86,7 +86,7 @@ var parseAndAddTweet = function(polarity) {
 	});
 	var res = Session.get('alert');
 	displayAlert(res.message, res.alert, 2000);
-	if(res.alert == 'success') {
+	if(res.alert === 'success') {
 		$(inputSelector).val('');
 	}
 	return false;
@@ -98,7 +98,7 @@ Template.adding.events({
 		e.preventDefault();
 	},
 	'keypress #inputPositive': function(e) {
-		if(e.keyCode == 13) {
+		if(e.keyCode === 13) {
 			parseAndAddTweet('positive');
 			e.preventDefault();
 		}
@@ -108,7 +108,7 @@ Template.adding.events({
 		e.preventDefault();
 	},
 	'keypress #inputNeutral': function(e) {
-		if(e.keyCode == 13) {
+		if(e.keyCode === 13) {
 			parseAndAddTweet('neutral');
 			e.preventDefault();
 		}
@@ -118,7 +118,7 @@ Template.adding.events({
 		e.preventDefault();
 	},
 	'keypress #inputNegative': function(e) {
-		if(e.keyCode == 13) {
+		if(e.keyCode === 13) {
 			parseAndAddTweet('negative');
 			e.preventDefault();
 		}
@@ -153,7 +153,7 @@ Template.statistic.total = function() {
 var selectedTab = function(option) {
 	if(option === undefined) 
 		return Session.get('selectedTab');
-	return option == Session.get('selectedTab') ? 'active' : '';
+	return option === Session.get('selectedTab') ? 'active' : '';
 }
 
 Template.collaborate.rendered = function() {
@@ -244,7 +244,7 @@ Template.collaborate.uncheckedSize = function() {
 			{ feedback: { $not: { $elemMatch: { user: Meteor.userId() } }}}
 		]
 	}).count();
-	return size == 0 ? '' : size;
+	return size === 0 ? '' : size;
 }
 
 var checkedPage = new Pagination("checkedTweets");
@@ -280,7 +280,7 @@ Template.collaborate.checkedSize = function() {
 			{ feedback: { $elemMatch: { user: Meteor.userId() } }}
 		]
 	}).count();
-	return size == 0 ? '' : size;
+	return size === 0 ? '' : size;
 }
 
 var addedPage = new Pagination("addedTweets");
@@ -297,7 +297,7 @@ Template.addedTweetsTable.pager = function() {
 
 Template.collaborate.addedSize = function() {
 	var size = Tweets.find({ creator: Meteor.userId() }).count();
-	return size == 0 ? '' : size;
+	return size === 0 ? '' : size;
 }
 
 Template.tweetEntry.polarityClass = function() {
@@ -348,7 +348,7 @@ Template.tweetEntry.feedback = function() {
 		}).length,
 		neg = sum - pos,
 		cssClass;
-	cssClass = (pos == neg) ? 'default' : ((pos > neg) ? 'success' : 'warning') 
+	cssClass = (pos === neg) ? 'default' : ((pos > neg) ? 'success' : 'warning') 
 	return {
 		pos: pos,
 		neg: neg,
@@ -361,7 +361,7 @@ var feedbackButtonState = function(e) {
 	var feedback = e.feedback.filter(function(el) {
 		return el.user === Meteor.userId();
 	});
-	if(feedback.length == 0) {
+	if(feedback.length === 0) {
 		return 0;
 	} else {
 		return feedback[0].isCorrect ? 1 : -1;
@@ -369,17 +369,17 @@ var feedbackButtonState = function(e) {
 }
 
 Template.tweetEntry.feedbackCorrect = function() {
-	return feedbackButtonState(this) == 1 ? 'success' : 'default';
+	return feedbackButtonState(this) === 1 ? 'success' : 'default';
 }
 
 Template.tweetEntry.feedbackIncorrect = function() {
-	return feedbackButtonState(this) == -1 ? 'danger' : 'default';
+	return feedbackButtonState(this) === -1 ? 'danger' : 'default';
 }
 
 var getLineDate = function() {
 	var lineDate = new Date();
 	lineDate.setHours(0); lineDate.setMinutes(0); lineDate.setSeconds(0); lineDate.setMilliseconds(0);  
-	while(lineDate.getDay() != 3) {
+	while(lineDate.getDay() !== 3) {
 		lineDate.setDate(lineDate.getDate() - 1); 
 	}
 	return lineDate;

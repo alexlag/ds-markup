@@ -56,8 +56,8 @@ Router.map(function () {
 
 	this.route('home', {
 		path: '/',
-		before: function() {
-			Router.go('twitter')
+		action: function() {
+			this.redirect('/twitter')
 		}
 	});
 });
