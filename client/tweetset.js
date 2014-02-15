@@ -184,10 +184,6 @@ Template.collaborate.events({
 	}
 });
 
-Template.collaborate.json = function() {
-	return encodeURIComponent(getTweetsJSONString());
-}
-
 Template.recentTweetsTable.entries = function() {
 	var cursor = Tweets.find({}, {sort: {created: -1}, limit: 10});
 	return cursor.fetch()
