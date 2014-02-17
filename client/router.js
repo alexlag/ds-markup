@@ -35,6 +35,7 @@ Router.map(function () {
 				NProgress.start();
 				this.stop();
 			}
+			Meteor.subscribe('myDeadlines');
 			document.title = 'Sentanal Submissions';
 			Meteor.call('jobDone', function(err, result) {
 				Session.set('jobDone', err ? false : result);
