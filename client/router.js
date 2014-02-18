@@ -55,6 +55,19 @@ Router.map(function () {
 		template: 'submissions'
 	});
 
+	this.route('results', {
+		path: '/results',
+		before: function() {
+			Meteor.call('getResults', function(err, result) {
+				Session.set('resultsArr', err ? null : result);
+			})
+		},
+		data: {
+			resultsClass: 'active'
+		},
+		template: 'results'
+	});
+
 	this.route('home', {
 		path: '/',
 		action: function() {

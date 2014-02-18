@@ -7,7 +7,10 @@
 				<h1>Program Submission</h1>
 			</div>
 			{{#if isReady}}
+				<div class="row"> 
 				{{> newSubmission}}
+				{{> deadlines}}
+				</div>
 				{{> oldSubmissions}}
 			{{else}}
 				<p>You haven't added enough tweets yet</p>

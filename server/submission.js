@@ -6,8 +6,12 @@ Meteor.publish('mySubmissions', function() {
 
 var jailServer = "http://172.31.189.134:3000/";
 
-var getTweetsJSONString = function(userId) {
-	var tweets = _.map(Tweets.find().fetch(), function(tweet) {
+var getTweetsJSONString = function(userId, readable) {
+	var lineDate = getLineDate();
+	var tweets = _.filter(Tweets.find().fetch(), function(tweet) {
+		return (tweet.created <= lineDate) || (tweet.creator === userId);
+	});
+	tweets = _.map(tweets, function(tweet) {
 		delete tweet['_id']
 		var sum = tweet.feedback.length,
 			pos = _.filter(tweet.feedback, function(el) {
@@ -19,11 +23,8 @@ var getTweetsJSONString = function(userId) {
 		tweet.created = new Date(tweet.created);
 		return tweet;
 	});
-	var lineDate = getLineDate();
-	tweets = _.filter(tweets, function(tweet) {
-		return (tweet.created <= lineDate) || (tweet.creator === userId);
-	});
-	return JSON.stringify(tweets);
+	
+	return readable ? JSON.stringify(tweets, null, '\t') : JSON.stringify(tweets);
 }
 
 Meteor.methods({
@@ -52,6 +53,9 @@ Meteor.methods({
 		} catch(e) {
 			return false;
 		}
+	},
+	"jsonExport": function() {
+		return getTweetsJSONString(this.userId, true);
 	},
 	"subResult": function(fileId) {
 		var result = HTTP.call("GET", jailServer + "status/" + fileId + '.json');

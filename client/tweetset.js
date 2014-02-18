@@ -180,7 +180,13 @@ Template.collaborate.isAdded = function() {
 
 Template.collaborate.events({
 	'click #export': function(e) {
-		window.saveAs(new Blob([getTweetsJSONString()], {type: 'application/json'}), 'tweets.json');
+		Meteor.call("jsonExport", function(err, res) {
+			if(err) {
+				console.log('Export file was not recieved: ', err);
+			} else {
+				window.saveAs(new Blob([res], {type: 'application/json'}), 'tweets.json');
+			}	
+		})
 	}
 });
 
@@ -383,24 +389,4 @@ var getLineDate = function() {
 		lineDate.setDate(lineDate.getDate() - 1); 
 	}
 	return lineDate;
-}
-
-getTweetsJSONString = function() {
-	var tweets = _.map(Tweets.find().fetch(), function(tweet) {
-		delete tweet['_id']
-		var sum = tweet.feedback.length,
-			pos = _.filter(tweet.feedback, function(el) {
-				return el.isCorrect;
-			}).length,
-			neg = sum - pos;
-		delete tweet['feedback'];
-		_.extend(tweet, { confirm: pos, denied: neg});
-		tweet.created = new Date(tweet.created);
-		return tweet;
-	});
-	var lineDate = getLineDate();
-	tweets = _.filter(tweets, function(tweet) {
-		return (tweet.created <= lineDate) || (tweet.creator === Meteor.userId());
-	});
-	return JSON.stringify(tweets, null, '\t');
 }

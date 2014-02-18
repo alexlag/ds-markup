@@ -1,0 +1,40 @@
+<template name="results">
+	{{#if currentUser}}
+	<div class="container">
+		<div class="row-fluid marketing"> 
+			<div class="alert alert-success" id="globalAlert" style="display: none"></div>
+			<div class="page-header">
+				<h1>Results</h1>
+			</div>
+			{{> resultsTable}}
+		</div>
+	</div>
+	{{/if}}
+</template>
+
+<template name="resultsTable">
+	<div class="col-md-12">
+		<table class="table table-stripped">
+			<thead>
+				<th>Name</th>
+				<th>Weekly</th>
+				<th>#1 Deadline</th>
+				<th>#2 Deadline</th>
+				<th>#3 Deadline</th>
+				<th>Score</th>
+			</thead>
+			<tbody>
+				{{#each entries}}
+					<tr>
+						<td>{{name}}</td>
+						<td>{{w}}</td>
+						<td>{{d1}}</td>
+						<td>{{d2}}</td>
+						<td>{{d3}}</td>
+						<td>{{score}}</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+</template>

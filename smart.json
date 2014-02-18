@@ -6,6 +6,7 @@
       "branch": "master"
     },
     "iron-router": {},
-    "collectionFS": {}
+    "collectionFS": {},
+    "cron": {}
   }
 }
