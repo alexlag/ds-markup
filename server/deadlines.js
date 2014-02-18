@@ -17,9 +17,9 @@ var deadline3 = function() {
 var cron = new Meteor.Cron( {
 	events:{
 		"0 0 * * 3"  : weekly,
-		"0 0 18 6 *" : deadline1,
-		"0 0 18 6 *" : deadline2,
-		"0 0 18 6 *" : deadline3
+		"0 0 12 3 *" : deadline1,
+		"0 0 9 4 *" : deadline2,
+		"0 0 7 5 *" : deadline3
 	}
 });
 
