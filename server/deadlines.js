@@ -36,9 +36,12 @@ Meteor.methods({
 		var resultsTable = [];
 		Meteor.users.find().forEach(function(user) {
 			if(user.deadlines) {
+				cssClass = '';
+				if(user._id === Meteor.userId()) cssClass = 'success';
+				if(user.profile.fullname === 'Baseline 1' || user.profile.fullname === 'Baseline 2') cssClass = 'warning';
 				resultsTable.push({
 					name: user.profile.fullname,
-					cssClass: user._id === Meteor.userId() ? 'success' : '',
+					cssClass: cssClass,
 					w: getDeadlineResult(user.deadlines.w),
 					d1: getDeadlineResult(user.deadlines.d1),
 					d2: getDeadlineResult(user.deadlines.d2),
