@@ -3,7 +3,7 @@ Template.resultsTable.entries = function() {
 }
 
 Template.resultsTable.rendered = function() {
-	// $("#resultsTable").tablesorter({ 
-	// 	sortList: [[1,0]] 
-	// }); 
+	$("#resultsTable").tablesorter({ 
+		sortList: [[1,0]] 
+	}); 
 }
