@@ -27,7 +27,7 @@ var jailServer = "http://172.31.189.134:3000/";
 
 var getDeadlineResult = function(deadline) {
 	if(!deadline || !deadline.url) return 'None';
-	var result = HTTP.call(deadline.url, {timeout: 100});
+	var result = HTTP.call("GET", deadline.url, {timeout: 100});
 	return result.statusCode !== 200 ? 'Error ' + result.content : result.data.result;
 }
 
@@ -38,6 +38,7 @@ Meteor.methods({
 			if(user.deadlines) {
 				resultsTable.push({
 					name: user.profile.fullname,
+					class: user._id === this.userId ? 'info' : '',
 					w: getDeadlineResult(user.deadlines.w),
 					d1: getDeadlineResult(user.deadlines.d1),
 					d2: getDeadlineResult(user.deadlines.d2),

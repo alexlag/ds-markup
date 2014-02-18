@@ -8,7 +8,7 @@ Router.map(function () {
 		path: '/twitter',
 		before: function() {
 			var handle = Meteor.subscribe('tweets');
-			if(handle.ready()) {
+			if(!handle || handle.ready()) {
 				NProgress.done();
 			} else {
 				NProgress.start();
@@ -29,7 +29,7 @@ Router.map(function () {
 		path: '/submissions',
 		before: function() {
 			var handle = Meteor.subscribe('mySubmissions');
-			if(handle.ready()) {
+			if(!handle || handle.ready()) {
 				NProgress.done();
 			} else {
 				NProgress.start();
