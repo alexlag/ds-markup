@@ -22,3 +22,5 @@ Accounts.validateNewUser(function (user) {
 
 	return true;
 });
+
+Accounts.emailTemplates.from = 'Markup <no-reply@ispras.ru>';
