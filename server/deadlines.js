@@ -38,7 +38,7 @@ Meteor.methods({
 			if(user.deadlines) {
 				resultsTable.push({
 					name: user.profile.fullname,
-					class: user._id === this.userId ? 'info' : '',
+					cssClass: user._id === Meteor.userId() ? 'success' : '',
 					w: getDeadlineResult(user.deadlines.w),
 					d1: getDeadlineResult(user.deadlines.d1),
 					d2: getDeadlineResult(user.deadlines.d2),
