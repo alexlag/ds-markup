@@ -1,5 +1,14 @@
 Template.resultsTable.entries = function() {
-	return Session.get('resultsArr');
+	var result = Session.get('resultsArr') || [{
+		name: '',
+		cssClass: '',
+		w: '',
+		d1: '',
+		d2: '',
+		d3: '',
+		score: ''
+	}];
+	return result;
 }
 
 Template.resultsTable.rendered = function() {
