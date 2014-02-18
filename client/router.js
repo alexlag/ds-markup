@@ -7,17 +7,19 @@ Router.map(function () {
 	this.route('twitter', {
 		path: '/twitter',
 		before: function() {
-			var handle = Meteor.subscribe('tweets');
-			if(!handle || handle.ready()) {
-				NProgress.done();
-			} else {
-				NProgress.start();
-				this.stop();
+			if(Meteor.userId()) {
+				var handle = Meteor.subscribe('tweets');
+				if(handle.ready()) {
+					NProgress.done();
+				} else {
+					NProgress.start();
+					this.stop();
+				}
+				Meteor.call('jobDone', function(err, result) {
+					Session.set('jobDone', err ? false : result);
+				});
 			}
 			document.title = 'Twitter Markup';
-			Meteor.call('jobDone', function(err, result) {
-				Session.set('jobDone', err ? false : result);
-			});
 		},
 		data: {
 			twitterClass: 'active'
@@ -28,26 +30,28 @@ Router.map(function () {
 	this.route('submissions', {
 		path: '/submissions',
 		before: function() {
-			var handle = Meteor.subscribe('mySubmissions');
-			if(!handle || handle.ready()) {
-				NProgress.done();
-			} else {
-				NProgress.start();
-				this.stop();
-			}
-			Meteor.subscribe('myDeadlines');
-			document.title = 'Sentanal Submissions';
-			Meteor.call('jobDone', function(err, result) {
-				Session.set('jobDone', err ? false : result);
-			});
-			Meteor.call('weekUploads', function(err, result) {
-				Session.set('weekUploads', err ? 0 : result);
-			});
-			SubmissionsFS.find().forEach(function(sub){
-				Meteor.call('subResult', sub._id, function(err, res) {
-					Session.set('upl' + sub._id, err ? 'No data' : res);
+			if(Meteor.userId()) {
+				var handle = Meteor.subscribe('mySubmissions');
+				if(handle.ready()) {
+					NProgress.done();
+				} else {
+					NProgress.start();
+					this.stop();
+				}
+				Meteor.subscribe('myDeadlines');
+				Meteor.call('jobDone', function(err, result) {
+					Session.set('jobDone', err ? false : result);
 				});
-			});
+				Meteor.call('weekUploads', function(err, result) {
+					Session.set('weekUploads', err ? 0 : result);
+				});
+				SubmissionsFS.find().forEach(function(sub){
+					Meteor.call('subResult', sub._id, function(err, res) {
+						Session.set('upl' + sub._id, err ? 'No data' : res);
+					});
+				});
+			}
+			document.title = 'Sentanal Submissions';
 		},
 		data: {
 			submissionClass: 'active'
@@ -58,9 +62,12 @@ Router.map(function () {
 	this.route('results', {
 		path: '/results',
 		before: function() {
-			Meteor.call('getResults', function(err, result) {
-				Session.set('resultsArr', err ? null : result);
-			})
+			if(Meteor.userId()) {
+				Meteor.call('getResults', function(err, result) {
+					Session.set('resultsArr', err ? null : result);
+				})
+			}
+			document.title = 'Results';
 		},
 		data: {
 			resultsClass: 'active'

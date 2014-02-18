@@ -1,8 +1,6 @@
 Meteor.publish('mySubmissions', function() {
 	if (this.userId) {
 		return SubmissionsFS.find({ owner: this.userId });
-	} else {
-		return SubmissionsFS.find('0');
 	}
 });
 
@@ -60,7 +58,7 @@ Meteor.methods({
 		return getTweetsJSONString(this.userId, true);
 	},
 	"subResult": function(fileId) {
-		var result = HTTP.call("GET", jailServer + "status/" + fileId + '.json');
+		var result = HTTP.call("GET", jailServer + "status/" + fileId + '.json', {timeout: 100});
 		return result.statusCode !== 200 ? 'Error ' + result.content : result.data.result;
 	},
 	"getLineDate": function() {
