@@ -1,6 +1,8 @@
 Meteor.publish('mySubmissions', function() {
 	if (this.userId) {
 		return SubmissionsFS.find({ owner: this.userId });
+	} else {
+		return SubmissionsFS.find('0');
 	}
 });
 
