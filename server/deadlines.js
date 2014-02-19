@@ -39,10 +39,12 @@ Meteor.methods({
 				cssClass = '';
 				if(user._id === Meteor.userId()) cssClass = 'success';
 				if(user.profile.fullname === 'Baseline 1' || user.profile.fullname === 'Baseline 2') cssClass = 'warning';
+				var weekResult = getDeadlineResult(user.deadlines.w);
+				weekResult = (weekResult === 'None') ? 0 : weekResult;
 				resultsTable.push({
 					name: user.profile.fullname,
 					cssClass: cssClass,
-					w: getDeadlineResult(user.deadlines.w),
+					w: weekResult,
 					d1: getDeadlineResult(user.deadlines.d1),
 					d2: getDeadlineResult(user.deadlines.d2),
 					d3: getDeadlineResult(user.deadlines.d3),

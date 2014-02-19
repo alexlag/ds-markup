@@ -16,6 +16,6 @@ Template.resultsTable.entries = function() {
 
 Template.resultsTable.rendered = function() {
 	$("#resultsTable").tablesorter({ 
-		sortList: [[1,0]] 
+		sortList: [[1,1]] 
 	}); 
 }
