@@ -13,7 +13,6 @@ Template.newSubmission.uploadCount = function() {
 Template.newSubmission.events({
 	'change .fileUploader': function (e) {
 		var files = e.target.files;
-		console.log(e.target.files);
 		var result = confirm("Do you really want to upload " + files[0].name + "?");
 		if (result === true) {
 			try {
