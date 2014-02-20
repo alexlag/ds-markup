@@ -7,6 +7,10 @@ SubmissionsFS.filter({
 	maxSize: 15728640
 });
 
+if(Meteor.isClient) {
+	SubmissionsFS.acceptDropsOn("newSubmission", ".col-md-6");
+}
+
 SubmissionsFS.events({
 	'invalid': function(type, fileRecord) {
 		if(Meteor.isClient) {
