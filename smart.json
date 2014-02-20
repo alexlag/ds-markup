@@ -6,7 +6,10 @@
       "branch": "master"
     },
     "iron-router": {},
-    "collectionFS": {},
+    "collectionFS": {
+      "git": "https://github.com/alexlag/Meteor-CollectionFS.git",
+      "branch": "master"
+    },
     "cron": {}
   }
 }
