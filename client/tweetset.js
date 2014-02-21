@@ -195,27 +195,42 @@ Template.recentTweetsTable.entries = function() {
 	return cursor.fetch()
 }
 
+parseAndGo = function(event, obj) {
+	if(event && event.keyCode === 13) {
+		var page = parseInt($(obj).val(), 10);
+		var max = parseInt($(obj).attr('data-max'), 10);
+		if(page && page > 0 && page <= max) {
+			Pagination.go($(obj).attr('data-head').replace("_pager_",""), page);
+		}
+	}
+}
+
 Pagination.prototype._bootstrap = function() {
 	var html = "";
 	if(!this._currentCount || this._totalPages < 2){
 		return html = "";
 	}
 	var data ='data-head="'+this._head+'" onclick="Pagination.goto(this)"';
-	html += '<div>' ;
-	html += '<ul class="pagination pagination-sm">';
-	html += '<li><a href="#Tweets"'+data+' data-page="1">«</a></li>';
-	for (var i = 1;i < this._totalPages + 1; i++) {
-	if(i !== this._currentPage){
-		html += '<li><a href="#Tweets" '+data+'data-page="'+i+'">'+i+'</a></li>'
-	}else{
-		html += '<li class="active"><a href="#Tweets" '+data+'data-page="'+i+'">'+i+'</a></li>'
-	}
-	}
-	html += '<li><a href="#Tweets" '+data+'data-page="'+this._totalPages+'">»</a></li>';
-	html += '</ul>';
-	html += '</div>'
-	return html;
+	html += '<div class="form-inline">';
+	html +=	'<button class="btn btn-default" ' + data + 'data-page="1">';
+	html +=	'<span class="glyphicon glyphicon-fast-backward"></span>';
+	html +=	'</button>';
+	html +=	'<button class="btn btn-default" ' + data + 'data-page="' + Math.max(1, this._currentPage - 1) +'">';
+	html +=	'<span class="glyphicon glyphicon-step-backward"></span>';
+	html +=	'</button>';
+	html += '<div class="btn btn-default active">Page ';
+	html +=	'<input class="form-control input-sm" style="width: 42px;" data-max="'+this._totalPages
+		+'"data-head="' + this._head 
+		+ '"onkeypress="parseAndGo(event,this)" placeholder="№" value="' + this._currentPage +'">';
+	html +=	' of ' + this._totalPages + '</div>';
+	html +=	'<button class="btn btn-default" ' + data + 'data-page="' + Math.min(this._totalPages, this._currentPage + 1) +'">';
+	html +=	'<span class="glyphicon glyphicon-step-forward"></span>';
+	html +=	'</button>';
+	html +=	'<button class="btn btn-default" ' + data + 'data-page="' + this._totalPages +'">';
+	html +=	'<span class="glyphicon glyphicon-fast-forward"></span></button></div>'
+	return html;	
 }
+
 
 Pagination.prototype.sortedSkip = function(order) {
 	return $.extend(this.skip(), {sort: {created: order}});
