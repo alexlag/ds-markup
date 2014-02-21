@@ -70,6 +70,10 @@
 	<tr>
 		<td>{{filename}}</td>
 		<td>{{date}}</td>
+		{{#if resultErr}}
+		<td><a href onclick="window.prompt('To get more info about error, write an email and mention this id:', '{{_id}}');">{{result}}</a></td>
+		{{else}}
 		<td>{{result}}</td>
+		{{/if}}
 	</tr>
 </template>

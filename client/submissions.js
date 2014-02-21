@@ -36,6 +36,10 @@ Template.submissionResult.date = function() {
 	return new Date(this.uploadDate).toString();
 }
 
+Template.submissionResult.resultErr = function() {
+	return Session.get('upl' + this._id) === 'Error occurred';
+}
+
 Template.submissionResult.result = function() {
 	return Session.get('upl' + this._id);
 }
