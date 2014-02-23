@@ -1,4 +1,8 @@
 var weekly = function() {
+	var today = new Date();
+	if(today.getDate() === 12 && today.getMonth() === 2) return 0;
+	if(today.getDate() === 9 && today.getMonth() === 3) return 0;
+	if(today.getDate() === 7 && today.getMonth() === 4) return 0;
 	massUpload('w');
 }
 
@@ -68,11 +72,19 @@ var massUpload = function(name) {
 				result = getURL(id, email, blob, tweets);
 
 			var modifier = {$set: {}};
-			modifier.$set['deadlines.' + name] = {
+			modifier.$set['deadlines.w'] = {
 						fileId: submission._id,
 						url: result
 					};	
 			Meteor.users.update({_id: user._id}, modifier);
+			if(name !== 'w') {
+				var modifier = {$set: {}};
+				modifier.$set['deadlines.' + name] = {
+							fileId: submission._id,
+							url: result
+						};	
+				Meteor.users.update({_id: user._id}, modifier);
+			}
 		}
 	});
 }
