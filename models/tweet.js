@@ -8,7 +8,7 @@ Tweets.allow({
 		return false;
 	},
 	remove: function (userId, tweet) {
-		return tweet.creator === userId;
+		return false;
 	}
 });
 
@@ -64,6 +64,11 @@ Meteor.methods({
 				message: 'Tweet was added'
 			});
 		return id;
+	},
+	removeTweet: function(id) {
+		if(Meteor.isServer) {
+			Tweets.remove({_id: id, creator: this.userId});
+		}
 	},
 	giveFeedback: function(tweetId, isCorrect) {
 		var tweet = Tweets.findOne(tweetId);

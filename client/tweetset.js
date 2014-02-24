@@ -217,7 +217,7 @@ Template.tweetEntry.events({
 	'click .deleteTweet': function(e) {
 		var result = confirm('Are you sure?');
 		if(result === true) {
-			Tweets.remove(this._id);
+			Meteor.call('removeTweet', this._id);
 		}
 		e.preventDefault();
 	},
