@@ -268,7 +268,7 @@ var feedbackButtonState = function(feedback) {
 	var filtered = feedback.filter(function(el) {
 		return el.user === userId;
 	});
-	if(feedback.length === 0) {
+	if(filtered.length === 0) {
 		return 0;
 	} else {
 		return filtered[0].isCorrect ? 1 : -1;
