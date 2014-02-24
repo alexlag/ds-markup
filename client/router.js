@@ -7,8 +7,10 @@ Router.map(function () {
 	this.route('twitter', {
 		path: '/twitter',
 		before: function() {
+			var	tab = this.params.tab || Session.get('tweetsTable').tab;
+			var	page = parseInt(this.params.page, 10) || Session.get('tweetsTable').page;
 			if(Meteor.userId()) {
-				var handle = Meteor.subscribe('tweets');
+				var handle = Meteor.subscribe(tab + 'Tweets', 10, 10*(page-1));
 				if(handle.ready()) {
 					NProgress.done();
 				} else {
@@ -17,6 +19,10 @@ Router.map(function () {
 				}
 				Meteor.call('jobDone', function(err, result) {
 					Session.set('jobDone', err ? false : result);
+				});
+				Session.set('tweetsTable', {
+					tab: tab,
+					page: page
 				});
 			}
 			document.title = 'Twitter Markup';

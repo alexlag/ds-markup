@@ -114,38 +114,28 @@
 
 <template name="collaborate">
 	<h2 id="Tweets">Tweets {{{exportButton}}}</h2>
-	<ul class="nav nav-tabs" id="tweetTabs">
-		<li class="{{isRecent}}">
-			<a href="#recentTweets" data-toggle="tab">Recent </a>
+	<ul class="nav nav-tabs">
+		<li class="{{tab 'recent'}}" id="recentTab">
+			<a href="">Recent </a>
 		</li>
-	
-		<li class="{{isUnchecked}}">
-			<a href="#uncheckedTweets" data-toggle="tab">Unchecked <span class="badge">{{uncheckedSize}}</span></a>
+		<li class="{{tab 'unchecked'}}" id="uncheckedTab">
+			<a href="">Unchecked <span class="badge">{{uncheckedCount}}</span></a>
 		</li>
-		<li class="{{isChecked}}">
-			<a href="#checkedTweets" data-toggle="tab">Checked <span class="badge">{{checkedSize}}</span></a>
+		<li class="{{tab 'checked'}}" id="checkedTab">
+			<a href="">Checked <span class="badge">{{checkedCount}}</span></a>
 		</li>
-		<li class="{{isAdded}}">
-			<a href="#addedTweets" data-toggle="tab">By me <span class="badge">{{addedSize}}</span></a>
+		<li class="{{tab 'added'}}" id="addedTab">
+			<a href="">By me <span class="badge">{{addedCount}}</span></a>
 		</li>
 	</ul>
 	<div class="tab-content">
-		<div class="tab-pane {{isRecent}}" id="recentTweets">	
-			{{> recentTweetsTable}}
-		</div>
-		<div class="tab-pane {{isUnchecked}}" id="uncheckedTweets">	
-			{{> uncheckedTweetsTable}}
-		</div>
-		<div class="tab-pane {{isChecked}}" id="checkedTweets">	
-			{{> checkedTweetsTable}}
-		</div>
-		<div class="tab-pane {{isAdded}}" id="addedTweets">	
-			{{> addedTweetsTable}}
+		<div class="tab-pane active">	
+			{{> tweetsTable}}
 		</div>
 	</div>
 </template>
 
-<template name="recentTweetsTable">
+<template name="tweetsTable">
 	<table class="table">
 		<thead>
 			<tr>
@@ -159,89 +149,57 @@
 			{{/each}}
 		</tbody>
 	</table>
-</template>
-
-<template name="uncheckedTweetsTable">
-	<table class="table">
-		<thead>
-			<tr>
-				<th class="col-sm-11">Text</th>
-				<th class="col-sm-1">Action</th>
-			</tr>
-		</thead>		
-		<tbody>
-			{{#each entries}}
-				{{> tweetEntry}}
-			{{/each}}
-		</tbody>
-	</table>
-	{{{pager}}}
-	<br />
-</template>
-
-<template name="checkedTweetsTable">
-	<table class="table">
-		<thead>
-			<tr>
-				<th class="col-sm-11">Text</th>
-				<th class="col-sm-1">Action</th>
-			</tr>
-		</thead>		
-		<tbody>
-			{{#each entries}}
-				{{> tweetEntry}}
-			{{/each}}
-		</tbody>
-	</table>
-	{{{pager}}}
-</template>
-
-<template name="addedTweetsTable">
-	<table class="table">
-		<thead>
-			<tr>
-				<th class="col-sm-11">Text</th>
-				<th class="col-sm-1">Action</th>
-			</tr>
-		</thead>		
-		<tbody>
-			{{#each entries}}
-				{{> tweetEntry}}
-			{{/each}}
-		</tbody>
-	</table>
-	{{{pager}}}
+	{{> pager}}
 </template>
 
 <template name="tweetEntry">
 	<tr class="{{polarityClass}}">
 		<td title="Polarity: {{polarity}}">{{text}}</td>
-		{{#if currentUser}}
-			{{#if owner}}
-				<td>
-					{{#with feedback}}
-					<button type="button" class="btn btn-xs btn-{{cssClass}} infoTweet" data-container="body" data-toggle="popover" data-content="{{pos}} confirmed, {{neg}} denied" data-original-title title>
-						{{sum}}
-					</button>
-					{{/with}}
-					<button type="button" class="btn btn-xs btn-danger deleteTweet">
-						<span class="glyphicon glyphicon-trash"></span>
-					</button>
-				</td>
-			{{else}}
-				<td>
-					<div>
-						<button type="button" class="btn btn-xs btn-{{feedbackCorrect}} correctTweet">
-							<span class="glyphicon glyphicon-thumbs-up"></span>
-						</button>
-						<button type="button" class="btn btn-xs btn-{{feedbackIncorrect}} incorrectTweet">
-							<span class="glyphicon glyphicon-thumbs-down"></span>
-						</button>
-					</div>
-				</td>
-			{{/if}}
+		{{#if owner}}
+			<td>
+				{{#with feedback}}
+				<button type="button" class="btn btn-xs btn-{{cssClass}} infoTweet" data-container="body" data-toggle="popover" data-content="{{pos}} confirmed, {{neg}} denied" data-original-title title>
+					{{sum}}
+				</button>
+				{{/with}}
+				<button type="button" class="btn btn-xs btn-danger deleteTweet">
+					<span class="glyphicon glyphicon-trash"></span>
+				</button>
+			</td>
 		{{else}}
-			<td></td>
+			<td>
+				<div>
+					<button type="button" class="btn btn-xs btn-{{feedbackCorrect}} correctTweet">
+						<span class="glyphicon glyphicon-thumbs-up"></span>
+					</button>
+					<button type="button" class="btn btn-xs btn-{{feedbackIncorrect}} incorrectTweet">
+						<span class="glyphicon glyphicon-thumbs-down"></span>
+					</button>
+				</div>
+			</td>
 		{{/if}}
 	</tr>
+</template>
+
+<template name="pager">
+	{{#with data}}
+	<div class="form-inline">
+		<button class="btn btn-default" id="pagerFirst">
+			<span class="glyphicon glyphicon-fast-backward"></span>
+		</button>
+		<button class="btn btn-default" id="pagerPrevious">
+			<span class="glyphicon glyphicon-step-backward"></span>
+		</button>
+		<div class="btn btn-default active" style="cursor: default;">Page 
+			<input class="form-control input-sm" style="width: 42px" placeholder="№" value="{{page}}" id="pager">
+			of {{totalPages}}
+		</div>
+		<button class="btn btn-default" id="pagerNext">
+			<span class="glyphicon glyphicon-step-forward"></span>
+		</button>
+		<button class="btn btn-default" id="pagerLast">
+			<span class="glyphicon glyphicon-fast-forward"></span>
+		</button>
+	</div>
+	{{/with}}
 </template>

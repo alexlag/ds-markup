@@ -7,7 +7,6 @@ standard-app-packages
 preserve-inputs
 accounts-base
 accounts-password
-pagination-mini
 accounts-ui-bootstrap-3
 iron-router
 collectionFS

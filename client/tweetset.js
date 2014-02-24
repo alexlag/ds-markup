@@ -1,4 +1,13 @@
 Meteor.startup(function() {
+	Tweets.find().observe({
+		added: updateStatistics,
+		removed: updateStatistics,
+		changed: updateBadges
+	});
+	Session.setDefault('tweetsTable', {tab: 'recent', page: 1});
+	Session.setDefault('jobDone', false);
+	Session.setDefault('badges', {unchecked: 0, checked: 0, added: 0});
+
 	Accounts.ui._options = {
 	    requestPermissions: {},
 	    extraSignupFields: [
@@ -37,8 +46,6 @@ Meteor.startup(function() {
 	        }
 	    ]
 	};
-
-	Session.set('selectedTab', 'recentTweets');
 });
 
 window.saveAs || ( window.saveAs = (window.navigator.msSaveBlob ? function(b,n){ return window.navigator.msSaveBlob(b,n); } : false) || window.webkitSaveAs || window.mozSaveAs || window.msSaveAs || (function(){
@@ -64,6 +71,22 @@ window.saveAs || ( window.saveAs = (window.navigator.msSaveBlob ? function(b,n){
 		}
 	};
 })() );
+
+var updateStatistics = function() {
+	Meteor.call('getUserStatistics', function(err, res) {
+		Session.set('statisticTotal', err ? {} : res);
+	});
+	Meteor.call('jobDone', function(err, result) {
+		Session.set('jobDone', err ? false : result);
+	});
+	updateBadges();
+}
+
+var updateBadges = function() {
+	Meteor.call('getUserBadges', function(err, res) {
+		Session.set('badges', err ? {} : res);
+	});
+}
 
 displayAlert = function(message, type, timeout) {
 	var div = $('#addingAlert');
@@ -126,56 +149,7 @@ Template.adding.events({
 })
 
 Template.statistic.total = function() {
-	var pos_total = 25, neu_total = 50, neg_total = 25,
-		total = pos_total + neu_total + neg_total,
-		pos = Tweets.find({creator: Meteor.userId(), polarity: 'positive'}).count(),
-		neu = Tweets.find({creator: Meteor.userId(), polarity: 'neutral'}).count(),
-		neg = Tweets.find({creator: Meteor.userId(), polarity: 'negative'}).count();
-	var sum = Math.min(pos, pos_total) + Math.min(neu, neu_total) + Math.min(neg, neg_total);
-	Meteor.call('jobDone', function(err, result) {
-		Session.set('jobDone', err ? false : result);
-	});
-	return {
-		todo: total,
-		pos_progress: pos + ' of ' + pos_total,
-		neu_progress: neu + ' of ' + neu_total,
-		neg_progress: neg + ' of ' + neg_total,
-		sum_progress: sum + ' of ' + total,
-		barpos: Math.floor(100.0 * pos / pos_total),
-		barneu: Math.floor(100.0 * neu / neu_total),
-		barneg: Math.floor(100.0 * neg / neg_total),
-		pos_done: pos >= pos_total,
-		neu_done: neu >= neu_total,
-		neg_done: neg >= neg_total
-	}
-}
-
-var selectedTab = function(option) {
-	if(option === undefined) 
-		return Session.get('selectedTab');
-	return option === Session.get('selectedTab') ? 'active' : '';
-}
-
-Template.collaborate.rendered = function() {
-	$('a[data-toggle=tab]').click(function(e) {
-		Session.set('selectedTab', $(this).attr('href').slice(1));
-	});
-}
-
-Template.collaborate.isRecent = function() {
-	return selectedTab('recentTweets');
-}
-
-Template.collaborate.isUnchecked = function() {
-	return selectedTab('uncheckedTweets');
-}
-
-Template.collaborate.isChecked = function() {
-	return selectedTab('checkedTweets');
-}
-
-Template.collaborate.isAdded = function() {
-	return selectedTab('addedTweets');
+	return Session.get('statisticTotal');
 }
 
 Template.collaborate.events({
@@ -187,150 +161,44 @@ Template.collaborate.events({
 				window.saveAs(new Blob([res], {type: 'application/json'}), 'tweets.json');
 			}	
 		})
+	},
+	'click #recentTab': function(e) {
+		Session.set('tweetsTable', {tab: 'recent', page: 1});
+		e.preventDefault()
+	},
+	'click #uncheckedTab': function(e) {
+		Session.set('tweetsTable', {tab: 'unchecked', page: 1});
+		e.preventDefault()
+	},
+	'click #checkedTab': function(e) {
+		Session.set('tweetsTable', {tab: 'checked', page: 1});
+		e.preventDefault()
+	},
+	'click #addedTab': function(e) {
+		Session.set('tweetsTable', {tab: 'added', page: 1});
+		e.preventDefault()
 	}
 });
 
-Template.recentTweetsTable.entries = function() {
-	var cursor = Tweets.find({}, {sort: {created: -1}, limit: 10});
-	return cursor.fetch()
+Template.collaborate.tab = function(name) {
+	return Session.get('tweetsTable').tab === name ? 'active' : '';
 }
 
-parseAndGo = function(event, obj) {
-	if(event && event.keyCode === 13) {
-		var page = parseInt($(obj).val(), 10);
-		var max = parseInt($(obj).attr('data-max'), 10);
-		if(page && page > 0 && page <= max) {
-			Pagination.go($(obj).attr('data-head').replace("_pager_",""), page);
-		}
-	}
+Template.collaborate.uncheckedCount = function() {
+	return Session.get('badges').unchecked;
 }
 
-Pagination.prototype._bootstrap = function() {
-	var html = "";
-	if(!this._currentCount || this._totalPages < 2){
-		return html = "";
-	}
-	var data ='data-head="'+this._head+'" onclick="Pagination.goto(this)"';
-	html += '<div class="form-inline">';
-	html +=	'<button class="btn btn-default" ' + data + 'data-page="1">';
-	html +=	'<span class="glyphicon glyphicon-fast-backward"></span>';
-	html +=	'</button>';
-	html +=	'<button class="btn btn-default" ' + data + 'data-page="' + Math.max(1, this._currentPage - 1) +'">';
-	html +=	'<span class="glyphicon glyphicon-step-backward"></span>';
-	html +=	'</button>';
-	html += '<div class="btn btn-default active">Page ';
-	html +=	'<input class="form-control input-sm" style="width: 42px;" data-max="'+this._totalPages
-		+'"data-head="' + this._head 
-		+ '"onkeypress="parseAndGo(event,this)" placeholder="№" value="' + this._currentPage +'">';
-	html +=	' of ' + this._totalPages + '</div>';
-	html +=	'<button class="btn btn-default" ' + data + 'data-page="' + Math.min(this._totalPages, this._currentPage + 1) +'">';
-	html +=	'<span class="glyphicon glyphicon-step-forward"></span>';
-	html +=	'</button>';
-	html +=	'<button class="btn btn-default" ' + data + 'data-page="' + this._totalPages +'">';
-	html +=	'<span class="glyphicon glyphicon-fast-forward"></span></button></div>'
-	return html;	
+Template.collaborate.checkedCount = function() {
+	return Session.get('badges').checked;
 }
 
-
-Pagination.prototype.sortedSkip = function(order) {
-	return $.extend(this.skip(), {sort: {created: order}});
+Template.collaborate.addedCount = function() {
+	return Session.get('badges').added;
 }
 
-var uncheckedPage = new Pagination("uncheckedTweets");
-
-Template.uncheckedTweetsTable.entries = function() {
-	var cursor = Tweets.find({
-		$and: [
-			{ creator: { $ne: Meteor.userId()}},
-			{ feedback: { $not: { $elemMatch: { user: Meteor.userId() } }}}
-		]
-	}, uncheckedPage.sortedSkip(1));
-	return cursor;
-}
-
-Template.uncheckedTweetsTable.pager = function() { 
-	var count = Tweets.find({
-		$and: [
-			{ creator: { $ne: Meteor.userId()}},
-			{ feedback: { $not: { $elemMatch: { user: Meteor.userId() } }}}
-		]
-	}).count();
-	return uncheckedPage.create(count);
-}
-
-Template.collaborate.uncheckedSize = function() {
-	var size = Tweets.find({
-		$and: [
-			{ creator: { $ne: Meteor.userId()}},
-			{ feedback: { $not: { $elemMatch: { user: Meteor.userId() } }}}
-		]
-	}).count();
-	return size === 0 ? '' : size;
-}
-
-var checkedPage = new Pagination("checkedTweets");
-
-Template.checkedTweetsTable.entries = function() {
-	var cursor = Tweets.find({
-		$and: [
-			{ creator: { $ne: Meteor.userId()}},
-			{ feedback: { $elemMatch: { user: Meteor.userId() } }}
-		]
-	}, checkedPage.sortedSkip(-1));
-	return cursor;
-}
-
-Template.checkedTweetsTable.pager = function() { 
-	var count = Tweets.find({
-		$and: [
-			{ creator: { $ne: Meteor.userId()}},
-			{ feedback: { $elemMatch: { user: Meteor.userId() } }}
-		]
-	}).count();
-	return checkedPage.create(count);
-}
-
-Template.collaborate.exportButton = function() {
-	return Session.get('jobDone') ? '<a id="export" class="btn btn-sm btn-default">Export</a>' : ''
-}
-
-Template.collaborate.checkedSize = function() {
-	var size = Tweets.find({
-		$and: [
-			{ creator: { $ne: Meteor.userId()}},
-			{ feedback: { $elemMatch: { user: Meteor.userId() } }}
-		]
-	}).count();
-	return size === 0 ? '' : size;
-}
-
-var addedPage = new Pagination("addedTweets");
-
-Template.addedTweetsTable.entries = function() {
-	var cursor = Tweets.find({ creator: Meteor.userId()}, addedPage.sortedSkip(-1) );
-	return cursor;
-}
-
-Template.addedTweetsTable.pager = function() {
-	var count = Tweets.find({ creator: Meteor.userId()}).count();
-	return addedPage.create(count);	
-}
-
-Template.collaborate.addedSize = function() {
-	var size = Tweets.find({ creator: Meteor.userId() }).count();
-	return size === 0 ? '' : size;
-}
-
-Template.tweetEntry.polarityClass = function() {
-	switch(this.polarity) {
-		case 'positive':
-			return 'success';
-		case 'negative':
-			return 'danger';
-		case 'neutral':
-			return 'active';
-	}
-	return ''
+Template.tweetsTable.entries = function() {
+	var sort = Session.get('tweetsTable').tab === 'unchecked' ? 1 : -1;
+	return Tweets.find({}, {sort: {created: sort}});
 }
 
 Template.tweetEntry.events({
@@ -343,19 +211,28 @@ Template.tweetEntry.events({
 		e.preventDefault();
 	},
 	'click .deleteTweet': function(e) {
-		var result = confirm("Are you sure?");
-		if (result === true) {
+		var result = confirm('Are you sure?');
+		if(result === true) {
 			Tweets.remove(this._id);
 		}
 		e.preventDefault();
-	}
+	},
 });
+
+Template.tweetEntry.polarityClass = function() {
+	switch(this.polarity) {
+		case 'neutral': return 'active';
+		case 'positive': return 'success';
+		case 'negative': return 'danger';
+	}
+	return '';
+}
 
 Template.tweetEntry.rendered = function() {
 	$('.infoTweet').popover({
 		placement: 'bottom',
-		trigger: 'hover',
-	});	
+		trigger: 'hover'
+	});
 }
 
 Template.tweetEntry.owner = function() {
@@ -369,39 +246,77 @@ Template.tweetEntry.feedback = function() {
 		}).length,
 		neg = sum - pos,
 		cssClass;
-	cssClass = (pos === neg) ? 'default' : ((pos > neg) ? 'success' : 'warning') 
+	cssClass = (pos === neg) ? 'default' : ((pos > neg) ? 'success' : 'warning')
 	return {
 		pos: pos,
-		neg: neg,
+		neg : neg,
 		sum: sum,
-		cssClass: cssClass 
-	}
-}
-
-var feedbackButtonState = function(e) {
-	var feedback = e.feedback.filter(function(el) {
-		return el.user === Meteor.userId();
-	});
-	if(feedback.length === 0) {
-		return 0;
-	} else {
-		return feedback[0].isCorrect ? 1 : -1;
+		cssClass: cssClass
 	}
 }
 
 Template.tweetEntry.feedbackCorrect = function() {
-	return feedbackButtonState(this) === 1 ? 'success' : 'default';
+	return feedbackButtonState(this.feedback) === 1 ? 'success' : 'default';
 }
 
 Template.tweetEntry.feedbackIncorrect = function() {
-	return feedbackButtonState(this) === -1 ? 'danger' : 'default';
+	return feedbackButtonState(this.feedback) === -1 ? 'danger' : 'default';
 }
 
-var getLineDate = function() {
-	var lineDate = new Date();
-	lineDate.setHours(0); lineDate.setMinutes(0); lineDate.setSeconds(0); lineDate.setMilliseconds(0);  
-	while(lineDate.getDay() !== 3) {
-		lineDate.setDate(lineDate.getDate() - 1); 
+var feedbackButtonState = function(feedback) {
+	var userId = Meteor.userId();
+	var filtered = feedback.filter(function(el) {
+		return el.user === userId;
+	});
+	if(feedback.length === 0) {
+		return 0;
+	} else {
+		return filtered[0].isCorrect ? 1 : -1;
 	}
-	return lineDate;
 }
+
+Template.pager.data = function() {
+	var tab = Session.get('tweetsTable').tab,
+		page = Session.get('tweetsTable').page,
+	 	totalPages = Math.floor(Session.get('badges')[tab] / 10) + 1; 
+
+	if(!totalPages || totalPages < 2) return null;
+	return {
+		tab: tab,
+		page: page,
+		totalPages: totalPages,
+		previousPage: Math.max(1, page - 1),
+		nextPage: Math.min(totalPages, page + 1)
+	};
+	var html = "";
+	if(totalPages < 2){
+		return html = "";
+	}
+}
+
+Template.pager.events({
+	'click #pagerFirst': function(e){
+		Session.set('tweetsTable', {tab: this.tab, page: 1});
+		e.preventDefault();
+	},
+	'click #pagerPrevious': function(e){
+		Session.set('tweetsTable', {tab: this.tab, page: this.previousPage});
+		e.preventDefault();
+	},
+	'click #pagerLast': function(e){
+		Session.set('tweetsTable', {tab: this.tab, page: this.totalPages});
+		e.preventDefault();
+	},
+	'click #pagerNext': function(e){
+		Session.set('tweetsTable', {tab: this.tab, page: this.nextPage});
+		e.preventDefault();
+	},
+	'keypress input#pager': function(e) {
+		if(e.keyCode === 13) {
+			var targetPage = parseInt($('input#pager').val(),10);
+			if(targetPage && targetPage > 0 && targetPage <= this.totalPages) 
+				Session.set('tweetsTable', {tab: this.tab, page: targetPage});
+			e.preventDefault();
+		}
+	}
+})
