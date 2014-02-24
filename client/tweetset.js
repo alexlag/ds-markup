@@ -73,13 +73,13 @@ window.saveAs || ( window.saveAs = (window.navigator.msSaveBlob ? function(b,n){
 })() );
 
 var updateStatistics = function() {
+	updateBadges();
 	Meteor.call('getUserStatistics', function(err, res) {
 		Session.set('statisticTotal', err ? {} : res);
 	});
 	Meteor.call('jobDone', function(err, result) {
 		Session.set('jobDone', err ? false : result);
 	});
-	updateBadges();
 }
 
 var updateBadges = function() {
