@@ -1,6 +1,5 @@
 {
   "packages": {
-    "pagination-mini": {},
     "accounts-ui-bootstrap-3": {
       "git": "https://github.com/mangasocial/meteor-accounts-ui-bootstrap-3.git",
       "branch": "master"
