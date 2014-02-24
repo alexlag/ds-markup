@@ -180,6 +180,10 @@ Template.collaborate.events({
 	}
 });
 
+Template.collaborate.exportButton = function() {
+	return Session.get('jobDone') ? '<a id="export" class="btn btn-sm btn-default">Export</a>' : '';
+}
+
 Template.collaborate.tab = function(name) {
 	return Session.get('tweetsTable').tab === name ? 'active' : '';
 }
