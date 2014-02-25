@@ -153,6 +153,7 @@ Template.adding.events({
 
 Template.statistic.total = function() {
 	var response = Session.get('statisticTotal');
+	if(!response) return null;
 	var pos_total = response.pos_total, neu_total = response.neu_total, neg_total = response.neg_total,
 		total = pos_total + neu_total + neg_total,
 		pos = response.pos,
