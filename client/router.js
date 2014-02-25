@@ -9,7 +9,13 @@ Router.map(function () {
 		before: function() {
 			var	tab = Session.get('tweetsTable').tab;
 			var	page = Session.get('tweetsTable').page;
-			Meteor.subscribe(tab + 'Tweets', 10, 10*(page-1));
+			var handle = Meteor.subscribe(tab + 'Tweets', 10, 10*(page-1));
+			if(handle.ready()) {
+				NProgress.done();
+			} else {
+				NProgress.start();
+				this.stop();
+			}
 			document.title = 'Twitter Markup';
 		},
 		data: {
