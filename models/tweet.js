@@ -143,3 +143,11 @@ var getEditDistance = function(a, b){
 
 	return matrix[b.length][a.length];
 };
+
+Broadcast = new Meteor.Collection('broadcast');
+
+Broadcast.allow({
+	insert: false,
+	update: false,
+	remove: false
+});

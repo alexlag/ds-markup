@@ -1,3 +1,15 @@
+Meteor.startup(function() {
+	Tweets.find().observe({
+		added: broadcastChange,
+		removed: broadcastChange,
+		changed: broadcastChange
+	})
+});
+
+var broadcastChange = function() {
+	Broadcast.update({_id: 1}, {$set: {m: Random.id()}})
+}
+
 Meteor.publish("recentTweets", function() {
 	if(this.userId) {
 		return Tweets.find({}, {sort: {created: -1}, limit: 10});
@@ -46,20 +58,6 @@ Meteor.methods({
 			neu: neu,
 			neg: neg
 		}
-		var sum = Math.min(pos, pos_total) + Math.min(neu, neu_total) + Math.min(neg, neg_total);
-		return {
-			todo: total,
-			pos_progress: pos + ' of ' + pos_total,
-			neu_progress: neu + ' of ' + neu_total,
-			neg_progress: neg + ' of ' + neg_total,
-			sum_progress: sum + ' of ' + total,
-			barpos: Math.floor(100.0 * pos / pos_total),
-			barneu: Math.floor(100.0 * neu / neu_total),
-			barneg: Math.floor(100.0 * neg / neg_total),
-			pos_done: pos >= pos_total,
-			neu_done: neu >= neu_total,
-			neg_done: neg >= neg_total
-		}
 	},
 	'getUserBadges': function() {
 		var unchecked = Tweets.find({
@@ -80,5 +78,11 @@ Meteor.methods({
 			checked: checked,
 			added: added
 		}
+	}
+});
+
+Meteor.publish("broadcast", function() {
+	if(this.userId) {
+		return Broadcast.find();
 	}
 })

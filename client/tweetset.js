@@ -1,8 +1,9 @@
+Meteor.subscribe('broadcast');
+
 Meteor.startup(function() {
-	Tweets.find().observe({
-		added: updateStatistics,
-		removed: updateStatistics,
-		changed: updateBadges
+	updateStatistics();
+	Broadcast.find().observe({
+		changed: updateStatistics
 	});
 	Session.setDefault('tweetsTable', {tab: 'recent', page: 1});
 	Session.setDefault('jobDone', false);
