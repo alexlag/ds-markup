@@ -9,15 +9,7 @@ Router.map(function () {
 		before: function() {
 			var	tab = Session.get('tweetsTable').tab;
 			var	page = Session.get('tweetsTable').page;
-			if(Meteor.userId()) {
-				var handle = Meteor.subscribe(tab + 'Tweets', 10, 10*(page-1));
-				if(handle.ready()) {
-					NProgress.done();
-				} else {
-					NProgress.start();
-					this.stop();
-				}
-			}
+			Meteor.subscribe(tab + 'Tweets', 10, 10*(page-1));
 			document.title = 'Twitter Markup';
 		},
 		data: {
@@ -30,13 +22,7 @@ Router.map(function () {
 		path: '/submissions',
 		before: function() {
 			if(Meteor.userId()) {
-				var handle = Meteor.subscribe('mySubmissions');
-				if(handle.ready()) {
-					NProgress.done();
-				} else {
-					NProgress.start();
-					this.stop();
-				}
+				Meteor.subscribe('mySubmissions');
 				Meteor.subscribe('myDeadlines');
 				Meteor.call('jobDone', function(err, result) {
 					Session.set('jobDone', err ? false : result);

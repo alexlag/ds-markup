@@ -152,7 +152,26 @@ Template.adding.events({
 })
 
 Template.statistic.total = function() {
-	return Session.get('statisticTotal');
+	var response = Session.get('statisticTotal');
+	var pos_total = response.pos_total, neu_total = response.neu_total, neg_total = response.neg_total,
+		total = pos_total + neu_total + neg_total,
+		pos = response.pos,
+		neu = response.neu,
+		neg = response.neg;
+	var sum = Math.min(pos, pos_total) + Math.min(neu, neu_total) + Math.min(neg, neg_total);
+	return {
+		todo: total,
+		pos_progress: pos + ' of ' + pos_total,
+		neu_progress: neu + ' of ' + neu_total,
+		neg_progress: neg + ' of ' + neg_total,
+		sum_progress: sum + ' of ' + total,
+		barpos: Math.floor(100.0 * pos / pos_total),
+		barneu: Math.floor(100.0 * neu / neu_total),
+		barneg: Math.floor(100.0 * neg / neg_total),
+		pos_done: pos >= pos_total,
+		neu_done: neu >= neu_total,
+		neg_done: neg >= neg_total
+	}
 }
 
 Template.collaborate.events({

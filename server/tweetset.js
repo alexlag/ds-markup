@@ -35,10 +35,17 @@ Meteor.publish("addedTweets", function(limit, skip) {
 Meteor.methods({
 	'getUserStatistics': function() {
 		var pos_total = 25, neu_total = 50, neg_total = 25,
-			total = pos_total + neu_total + neg_total,
 			pos = Tweets.find({creator: this.userId, polarity: 'positive'}).count(),
 			neu = Tweets.find({creator: this.userId, polarity: 'neutral'}).count(),
 			neg = Tweets.find({creator: this.userId, polarity: 'negative'}).count();
+		return {
+			pos_total: pos_total,
+			neu_total: neu_total,
+			neg_total: neg_total,
+			pos: pos,
+			neu: neu,
+			neg: neg
+		}
 		var sum = Math.min(pos, pos_total) + Math.min(neu, neu_total) + Math.min(neg, neg_total);
 		return {
 			todo: total,
