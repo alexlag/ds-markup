@@ -48,16 +48,15 @@ Meteor.methods({
 		if (!this.userId)
 			throw new Meteor.Error(403, 'You must be logged in');
 
-		if(Meteor.isServer) {
-			Tweets.insert({
-				_id: id,
-				created: new Date().getTime(),
-				creator: this.userId,
-				text: options.text,
-				polarity: options.polarity,
-				feedback: []
-			});
-		}
+		
+		Tweets.insert({
+			_id: id,
+			created: new Date().getTime(),
+			creator: this.userId,
+			text: options.text,
+			polarity: options.polarity,
+			feedback: []
+		});
 		if(Meteor.isClient)
 			Session.set('alert', { 
 				alert: 'success', 
