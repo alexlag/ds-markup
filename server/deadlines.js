@@ -52,7 +52,7 @@ Meteor.methods({
 					d1: getDeadlineResult(user.deadlines.d1),
 					d2: getDeadlineResult(user.deadlines.d2),
 					d3: getDeadlineResult(user.deadlines.d3),
-					score: 0
+					score: user.profile.score || 0
 				})
 			}
 		});
