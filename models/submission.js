@@ -27,7 +27,7 @@ SubmissionsFS.events({
 
 SubmissionsFS.allow({
 	insert: function(userId, file) { 
-		return userId && (file.owner === userId) && (weekUploadsUser(userId) < 10);
+		return userId && (file.owner === userId) && (weekUploadsUser(userId) < allowedUploads(userId));
 	},
 	update: function(userId, file, fields, modifier) {
 		return false;

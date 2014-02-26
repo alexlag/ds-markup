@@ -65,7 +65,7 @@ var massUpload = function(name) {
 
 	Meteor.users.find().forEach(function(user) {
 		var submission = SubmissionsFS.findOne({owner: user._id},{sort: {uploadDate: -1}});
-		if(user.profile && user.profile.number && submission) {
+		if(user.profile && user.profile.isStudent && submission) {
 			var blob = SubmissionsFS.retrieveBuffer(submission._id),
 				id = name + Random.id(),
 				email = user.emails[0].address,

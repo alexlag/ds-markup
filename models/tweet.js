@@ -81,8 +81,9 @@ Meteor.methods({
 		}
 	},
 	jobDone: function() {
-		if(Meteor.user &&
-			Tweets.find({creator: Meteor.userId(), polarity: 'neutral'}).count() >= 50 &&
+		if(!Meteor.user()) return false;
+		if(Meteor.user().profile && Meteor.user().profile.privileged) return true;
+		if(Tweets.find({creator: Meteor.userId(), polarity: 'neutral'}).count() >= 50 &&
 			Tweets.find({creator: Meteor.userId(), polarity: 'positive'}).count() >= 25 &&
 			Tweets.find({creator: Meteor.userId(), polarity: 'negative'}).count() >= 25)
 			return true;

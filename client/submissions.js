@@ -10,6 +10,10 @@ Template.newSubmission.uploadCount = function() {
 	return Session.get('weekUploads');
 }
 
+Template.newSubmission.maxUploads = function() {
+	return Meteor.user().profile.maxWeeklyUploads || 10;
+}
+
 Template.newSubmission.events({
 	'change .fileUploader': function (e) {
 		var files = e.target.files;

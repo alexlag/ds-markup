@@ -95,3 +95,7 @@ weekUploadsUser = function(userId) {
 	});
 	return uploadsThisWeek.length;
 }
+
+allowedUploads = function(userId) {
+	return Meteor.users.findOne({_id: userId}).profile.maxWeeklyUploads || 10;
+}

@@ -1,4 +1,4 @@
-Accounts.validateNewUser(function (user) {
+Accounts.validateNewUser(function(user) {
 	var profiles = _.pluck(Meteor.users.find().fetch() || [], 'profile');
 	if(profiles && profiles.length > 0) {
 		var numbers = _.map(profiles, function(el) {
@@ -21,6 +21,17 @@ Accounts.validateNewUser(function (user) {
 	}
 
 	return true;
+});
+
+Accounts.onCreateUser(function(options, user) {
+	if(options.profile) {
+		user.profile = options.profile;
+		user.profile.privileged = false;
+		user.profile.isStudent = true;
+		user.profile.maxWeeklyUploads = 10;
+		user.profile.score = 0; 
+	}
+	return user;
 });
 
 Accounts.emailTemplates.from = 'Markup <no-reply@ispras.ru>';

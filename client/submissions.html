@@ -32,7 +32,7 @@
 			<div class="panel-body">
 			<div class="alert alert-success" id="addingAlert" style="display: none"></div>
 			{{#if canAdd}}
-				<p>Uploads since last wednesday: {{uploadCount}} of 10</p>
+				<p>Uploads since last wednesday: {{uploadCount}} of {{maxUploads}}</p>
 				<input name="file" type="file" class="fileUploader">
 				<p class="help-block">Zip-archive, no more than 15Mb</p>
 			{{else}}
