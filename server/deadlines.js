@@ -7,6 +7,7 @@ var weekly = function() {
 }
 
 var deadline1 = function() {
+	console.log('I WAS IN DEADLINE 1')
 	massUpload('d1');
 }
 
@@ -21,7 +22,8 @@ var deadline3 = function() {
 var cron = new Meteor.Cron( {
 	events:{
 		"0 0 * * 3"  : weekly,
-		"0 0 12 3 *" : deadline1,
+		"39 0 12 3 *" : deadline1,
+		"44 0 12 2 *" : deadline1,
 		"0 0 9 4 *" : deadline2,
 		"0 0 7 5 *" : deadline3
 	}
