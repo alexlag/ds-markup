@@ -14,8 +14,14 @@ Template.resultsTable.entries = function() {
 		}];
 }
 
+var floatExtraction = function(node) {
+	var parsed = parseFloat(node.innerHTML);
+	return isNaN(parsed) ? '0' : node.innerHTML;
+}
+
 Template.resultsTable.rendered = function() {
 	$("#resultsTable").tablesorter({ 
+		// textExtraction: floatExtraction,
 		sortList: [[1,1]] 
 	}); 
 }
