@@ -21,7 +21,7 @@ var floatExtraction = function(node) {
 
 Template.resultsTable.rendered = function() {
 	$("#resultsTable").tablesorter({ 
-		// textExtraction: floatExtraction,
+		textExtraction: floatExtraction,
 		sortList: [[1,1]] 
 	}); 
 }
